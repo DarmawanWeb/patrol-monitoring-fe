@@ -11,7 +11,7 @@ export const navItems: NavItem[] = [
   },
   {
     title: "Patrol Area",
-    url: "/dashboard/area",
+    url: "/dashboard/patrol-area",
     icon: "laptop",
     shortcut: ["m", "d"],
     items: [],
