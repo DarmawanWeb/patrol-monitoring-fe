@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import Link from "next/link";
 import {
   Card,
@@ -7,6 +8,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import SignInForm from "./_components/sign-in-form";
+
+export const metadata: Metadata = {
+  title: "Sign In",
+};
 
 export default function SignInViewPage() {
   return (
