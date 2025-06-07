@@ -3,7 +3,7 @@ import { NavItem } from "@/types/nav-item";
 export const navItems: NavItem[] = [
   {
     title: "Dashboard",
-    url: "/dashboard/overview",
+    url: "/dashboard",
     icon: "dashboard",
     isActive: false,
     shortcut: ["d", "d"],
@@ -11,7 +11,7 @@ export const navItems: NavItem[] = [
   },
   {
     title: "Patrol Area",
-    url: "/dashboard/masterdata/projects",
+    url: "/dashboard/area",
     icon: "laptop",
     shortcut: ["m", "d"],
     items: [],
