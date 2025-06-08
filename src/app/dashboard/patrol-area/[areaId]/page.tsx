@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { useEffect, useState } from "react";
 import PageContainer from "@/components/layout/page-container";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
@@ -10,7 +11,37 @@ import PatrolAreaCreateModal from "../_components/patrol-area-form";
 
 import MapComponent from "@/components/maps/maps";
 
+type Marker = {
+  name: string;
+  type: "overheat-component" | "robot" | "station";
+  temperature: number;
+  positions: { lat: number; lon: number; heading: number }[];
+};
+
 export default function AreaPage() {
+  const [markers, setMarkers] = useState<Marker[]>([]);
+
+  useEffect(() => {
+    const generateDummyMarkers = () => {
+      const dummyMarkers = [];
+      for (let i = 0; i < 10; i++) {
+        const lat = -8.45 + Math.random() * 0.1;
+        const lon = 115.8 + Math.random() * 0.1;
+        const temperature = Math.random() * 50 + 30;
+        dummyMarkers.push({
+          name: `Component ${i}`,
+          type: (i % 3 === 0
+            ? "overheat-component"
+            : "robot") as Marker["type"],
+          temperature: temperature,
+          positions: [{ lat, lon, heading: Math.random() * 360 }],
+        });
+      }
+      setMarkers(dummyMarkers);
+    };
+
+    generateDummyMarkers();
+  }, []);
   const { areaId } = useParams();
   return (
     <PageContainer scrollable={false}>
@@ -51,7 +82,7 @@ export default function AreaPage() {
 
           <section className="w-full h-full">
             <section className="h-8/12">
-              <MapComponent />
+              <MapComponent markers={markers} />
             </section>
             <section className="h-4/12 pt-2">
               <AreaDetailCard />
