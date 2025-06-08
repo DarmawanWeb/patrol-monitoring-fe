@@ -46,6 +46,7 @@ export default function SignInForm() {
   const onSubmit = async (data: SignInFormValue) => {
     startTransition(async () => {
       toast.success(`Login successful! Redirecting to sign in...${data.email}`);
+      router.push("/dashboard/overview");
     });
   };
 

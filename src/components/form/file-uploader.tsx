@@ -7,6 +7,7 @@ import Dropzone, {
   type FileRejection,
 } from "react-dropzone";
 import { toast } from "sonner";
+import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -272,7 +273,7 @@ function FileCard({ file, progress, onRemove }: FileCardProps) {
     <div className="relative flex items-center space-x-4">
       <div className="flex flex-1 space-x-4">
         {isFileWithPreview(file) ? (
-          <img
+          <Image
             src={file.preview}
             alt={file.name}
             width={48}

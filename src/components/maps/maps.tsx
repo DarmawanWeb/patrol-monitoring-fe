@@ -9,14 +9,13 @@ const MAPTILER_API_KEY = "fmGw3tICqMR3PHHrFVnt";
 const MapComponent = () => {
   useEffect(() => {
     const defaultIcon = new L.Icon({
-      iconUrl: require("leaflet/dist/images/marker-icon.png"),
       iconSize: [25, 41],
       iconAnchor: [12, 41],
       popupAnchor: [1, -34],
       shadowSize: [41, 41],
     });
 
-    (L.Marker.prototype as any).options.icon = defaultIcon;
+    L.Marker.prototype.options.icon = defaultIcon;
   }, []);
 
   return (

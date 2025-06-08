@@ -52,6 +52,7 @@ export const Icons = {
   billing: IconCreditCard,
   ellipsis: IconDotsVertical,
   add: IconPlus,
+  menu: IconMenu,
   warning: IconAlertTriangle,
   user: IconUser,
   arrowRight: IconArrowRight,
