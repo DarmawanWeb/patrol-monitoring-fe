@@ -16,6 +16,12 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/statics/uploads/**",
       },
+      {
+        protocol: "https",
+        hostname: "www.therobotreport.com",
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
 };
