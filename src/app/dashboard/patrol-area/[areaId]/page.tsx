@@ -31,7 +31,9 @@ export default function AreaPage() {
         const temperature = Math.random() * 50 + 30;
         dummyMarkers.push({
           name: `Component ${i}`,
-          type: (i % 3 === 0 ? "station" : "robot") as Marker["type"],
+          type: (i % 3 === 0
+            ? "overheat-component"
+            : "robot") as Marker["type"],
           temperature: temperature,
           positions: { lat, lon, heading: Math.random() * 360 },
         });

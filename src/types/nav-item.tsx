@@ -32,5 +32,7 @@ export interface FooterItem {
 }
 
 https: export type MainNavItem = NavItemWithOptionalChildren;
+ekwr
+
 
 export type SidebarNavItem = NavItemWithChildren;
