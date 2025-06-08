@@ -47,7 +47,7 @@ export default function AreaPage() {
               <MapComponent />
             </section>
             <section className="h-4/12 pt-2">
-              <Card className="h-full">
+              <Card className="h-full py-0">
                 <CardHeader className="flex flex-col space-y-2 bg-secondary text-center mb-0">
                   <h2 className="py-1 font-semibold mx-auto">Area Details</h2>
                 </CardHeader>

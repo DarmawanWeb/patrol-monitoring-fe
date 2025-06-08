@@ -69,7 +69,7 @@ export function ThemeSelector() {
           <span className="text-muted-foreground block sm:hidden">Theme</span>
           <SelectValue placeholder="Select a theme" />
         </SelectTrigger>
-        <SelectContent align="end">
+        <SelectContent align="end" className="z-10">
           <SelectGroup>
             <SelectLabel>Default</SelectLabel>
             {DEFAULT_THEMES.map((theme) => (

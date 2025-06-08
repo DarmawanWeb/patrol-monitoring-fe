@@ -24,7 +24,11 @@ const MapComponent = () => {
       center={[-7.241731, 112.753537]}
       zoom={18}
       maxZoom={18}
-      style={{ height: "100%", width: "100%", borderRadius: "0.5rem" }}
+      style={{
+        height: "100%",
+        width: "100%",
+        zIndex: 0,
+      }}
     >
       <TileLayer
         url={`https://api.maptiler.com/maps/basic/{z}/{x}/{y}.png?key=${MAPTILER_API_KEY}`}
