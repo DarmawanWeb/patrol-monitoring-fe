@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import PageContainer from "@/components/layout/page-container";
+import PatrolAreaCreateModal from "./[areaId]/_components/patrol-area-form";
 
 const areaData = [
   {
@@ -71,12 +72,18 @@ export default function PatrolArea() {
             title="Patrol Area"
             description="Manage patrol areas for robots and missions."
           />
-          <Link
+          <PatrolAreaCreateModal
+            initialData={null}
+            pageTitle="Create Patrol Area"
+            pageDescription="Create a new patrol area by filling out the details below. You can
+              edit or delete areas later."
+          />
+          {/* <Link
             href="/dashboard/patrol-area/new"
             className={cn(buttonVariants(), "text-xs md:text-sm")}
           >
             <Plus className="mr-2 h-4 w-4" /> Add New
-          </Link>
+          </Link> */}
         </div>
         <Separator />
 

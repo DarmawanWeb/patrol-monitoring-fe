@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "@/styles/globals.css";
+import "@/styles/theme.css";
 import { Toaster } from "@/components/ui/sonner";
 import { Poppins } from "next/font/google";
 import { cookies } from "next/headers";
