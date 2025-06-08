@@ -1,11 +1,10 @@
 "use client";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC } from "react";
 import {
   MapContainer,
   TileLayer,
   Marker,
   LayersControl,
-  Popup,
   useMapEvents,
   ZoomControl,
 } from "react-leaflet";
@@ -13,7 +12,7 @@ import "leaflet/dist/leaflet.css";
 import "leaflet.heat";
 import L from "leaflet";
 import useTileStore from "@/stores/use-tile-store";
-import { HeatmapLayer } from "./heatmap-layer";
+// import { HeatmapLayer } from "./heatmap-layer";
 import { stadiaMapsApiKey } from "@/lib/env";
 import MarkerPopup from "./marker-popup";
 
@@ -42,21 +41,21 @@ export interface MapComponentProps {
 
 const MapComponent: FC<MapComponentProps> = ({ markers }) => {
   const { setSelectedTile, selectedTile } = useTileStore();
-  const [heatData, setHeatData] = useState<[number, number, number][]>([]); // Include temperature as the intensity of heatmap
+  // const [heatData, setHeatData] = useState<[number, number, number][]>([]); // Include temperature as the intensity of heatmap
 
-  useEffect(() => {
-    if (markers) {
-      setHeatData(
-        markers
-          .filter((marker) => marker.temperature)
-          .map((marker) => [
-            marker.positions.lat,
-            marker.positions.lon,
-            marker.temperature!,
-          ])
-      );
-    }
-  }, [markers]);
+  // useEffect(() => {
+  //   if (markers) {
+  //     setHeatData(
+  //       markers
+  //         .filter((marker) => marker.temperature)
+  //         .map((marker) => [
+  //           marker.positions.lat,
+  //           marker.positions.lon,
+  //           marker.temperature!,
+  //         ])
+  //     );
+  //   }
+  // }, [markers]);
 
   const LayerChangeHandler: FC = () => {
     useMapEvents({
@@ -121,7 +120,7 @@ const MapComponent: FC<MapComponentProps> = ({ markers }) => {
         </LayersControl.BaseLayer>
       </LayersControl>
 
-      {heatData.length > 0 && (
+      {/* {heatData.length > 0 && (
         <LayersControl.Overlay name="Heatmap">
           <TileLayer
             url={`https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`}
@@ -137,7 +136,7 @@ const MapComponent: FC<MapComponentProps> = ({ markers }) => {
               ])}
           />
         </LayersControl.Overlay>
-      )}
+      )} */}
 
       {markers?.map((marker, index) => {
         const { lat, lon } = marker.positions;

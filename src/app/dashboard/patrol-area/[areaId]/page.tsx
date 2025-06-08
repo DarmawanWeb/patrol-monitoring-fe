@@ -6,7 +6,6 @@ import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { useParams } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import AreaDetailCard from "./_components/area-detail-card";
 import PatrolAreaCreateModal from "../_components/patrol-area-form";
 

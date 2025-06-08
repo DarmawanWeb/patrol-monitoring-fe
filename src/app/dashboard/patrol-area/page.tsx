@@ -3,7 +3,6 @@ import { Separator } from "@/components/ui/separator";
 import PageContainer from "@/components/layout/page-container";
 import PatrolAreaCard from "./_components/patrol-area-card";
 import PatrolAreaCreateModal from "./_components/patrol-area-form";
-import ChatComponent from "@/components/chat";
 
 const areaData = [
   {

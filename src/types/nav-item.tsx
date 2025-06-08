@@ -1,5 +1,4 @@
 import { Icons } from "@/components/icons";
-import { TypeOf } from "zod";
 
 export interface NavItem {
   title: string;
@@ -15,7 +14,8 @@ export interface NavItem {
 }
 
 export interface NavItemWithChildren extends NavItem {
-  items:TypeOf NavItemWithChildren[];
+  items: NavItemWithChildren[];
+}
 
 export interface NavItemWithOptionalChildren extends NavItem {
   items?: NavItemWithChildren[];
@@ -26,13 +26,10 @@ export interface FooterItem {
   items: {
     title: string;
     href: string;
-    external?: boolea;
-    n;
+    external?: boolean;
   }[];
 }
 
-https: export type MainNavItem = NavItemWithOptionalChildren;
-ekwr
-
+export type MainNavItem = NavItemWithOptionalChildren;
 
 export type SidebarNavItem = NavItemWithChildren;
