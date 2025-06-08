@@ -5,6 +5,8 @@ import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { useParams } from "next/navigation";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import AreaDetailCard from "./_components/area-detail-card";
+import PatrolAreaCreateModal from "../_components/patrol-area-form";
 
 import MapComponent from "@/components/maps/maps";
 
@@ -17,6 +19,11 @@ export default function AreaPage() {
           <Heading
             title={`Patrol Area: ${areaId}`}
             description="Manage patrol areas for robots and missions."
+          />
+          <PatrolAreaCreateModal
+            initialData={null}
+            pageTitle="Update Patrol Area"
+            pageDescription="Update patrol area details."
           />
         </div>
         <Separator />
@@ -47,38 +54,7 @@ export default function AreaPage() {
               <MapComponent />
             </section>
             <section className="h-4/12 pt-2">
-              <Card className="h-full py-0">
-                <CardHeader className="flex flex-col space-y-2 bg-secondary text-center mb-0">
-                  <h2 className="py-1 font-semibold mx-auto">Area Details</h2>
-                </CardHeader>
-                <CardContent className="grid grid-cols-2 gap-5 text-xs px-2 items-start justify-start my-0 -mt-4">
-                  <div className="">
-                    <h4 className="font-bold">Area Location</h4>
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Beatae dolorem ducimus ea sequi qui
-                    </p>
-                  </div>
-                  <div className="">
-                    <div className="mb-2">
-                      <h4 className="font-bold">Center Location </h4>
-                      <div className="text-xs">
-                        <p>Lat : 12.34561368109</p>
-                        <p>Lon : 78.901136191312</p>
-                      </div>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold">Dock Location </h4>
-                      <div className="text-xs">
-                        <p>Lat : 12.345183610916</p>
-                        <p>Lon : 78.901361903112</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className=""></div>
-                </CardContent>
-              </Card>
+              <AreaDetailCard />
             </section>
           </section>
         </section>

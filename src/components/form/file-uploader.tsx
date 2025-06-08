@@ -197,7 +197,7 @@ export function FileUploader(props: FileUploaderProps) {
           <div
             {...getRootProps()}
             className={cn(
-              "group border-muted-foreground/25 hover:bg-muted/25 relative grid h-52 w-full cursor-pointer place-items-center rounded-lg border-2 border-dashed px-5 py-2.5 text-center transition",
+              "group border-muted-foreground/25 hover:bg-muted/25 relative grid h-48 w-full cursor-pointer place-items-center rounded-lg border-2 border-dashed px-5 py-2.5 text-center transition",
               "ring-offset-background focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-hidden",
               isDragActive && "border-muted-foreground/50",
               isDisabled && "pointer-events-none opacity-60",
@@ -210,11 +210,11 @@ export function FileUploader(props: FileUploaderProps) {
               <div className="flex flex-col items-center justify-center gap-4 sm:px-5">
                 <div className="rounded-full border border-dashed p-3">
                   <Upload
-                    className="text-muted-foreground size-7"
+                    className="text-muted-foreground size-4"
                     aria-hidden="true"
                   />
                 </div>
-                <p className="text-muted-foreground font-medium">
+                <p className="text-muted-foreground font-sm">
                   Drop the files here
                 </p>
               </div>
@@ -222,15 +222,15 @@ export function FileUploader(props: FileUploaderProps) {
               <div className="flex flex-col items-center justify-center gap-4 sm:px-5">
                 <div className="rounded-full border border-dashed p-3">
                   <Upload
-                    className="text-muted-foreground size-7"
+                    className="text-muted-foreground size-5"
                     aria-hidden="true"
                   />
                 </div>
                 <div className="space-y-px">
-                  <p className="text-muted-foreground font-medium">
+                  <p className="text-muted-foreground font-sm">
                     Drag {`'n'`} drop files here, or click to select files
                   </p>
-                  <p className="text-muted-foreground/70 text-sm">
+                  <p className="text-muted-foreground/70 text-xs">
                     You can upload
                     {maxFiles > 1
                       ? ` ${maxFiles === Infinity ? "multiple" : maxFiles}
@@ -245,7 +245,7 @@ export function FileUploader(props: FileUploaderProps) {
       </Dropzone>
       {files?.length ? (
         <ScrollArea className="h-fit w-full px-3">
-          <div className="max-h-48 space-y-4">
+          <div className="max-h-40 space-y-4">
             {files?.map((file, index) => (
               <FileCard
                 key={index}

@@ -4,5 +4,11 @@ export interface PatrolArea {
   description: string;
   numberOfRobots: number;
   assignedMissions: number;
-  imageUri?: string;
+  image: File;
+  address: string;
+  mapCenterLat: number;
+  mapCenterLong: number;
+  chargingDockLat: number;
+  chargingDockLong: number;
+  chargingDockYaw: number;
 }
