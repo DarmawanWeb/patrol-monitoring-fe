@@ -18,7 +18,7 @@ export const navItems: NavItem[] = [
   },
   {
     title: "Robots",
-    url: "/dashboard/product",
+    url: "/dashboard/robots",
     icon: "product",
     shortcut: ["p", "p"],
     isActive: false,

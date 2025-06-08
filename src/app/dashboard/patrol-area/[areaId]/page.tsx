@@ -5,6 +5,7 @@ import PageContainer from "@/components/layout/page-container";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { useParams } from "next/navigation";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import AreaDetailCard from "./_components/area-detail-card";
 import PatrolAreaCreateModal from "../_components/patrol-area-form";
@@ -15,7 +16,7 @@ type Marker = {
   name: string;
   type: "overheat-component" | "robot" | "station";
   temperature: number;
-  positions: { lat: number; lon: number; heading: number }[];
+  positions: { lat: number; lon: number; heading: number };
 };
 
 export default function AreaPage() {
@@ -24,17 +25,15 @@ export default function AreaPage() {
   useEffect(() => {
     const generateDummyMarkers = () => {
       const dummyMarkers = [];
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < 1000; i++) {
         const lat = -8.45 + Math.random() * 0.1;
         const lon = 115.8 + Math.random() * 0.1;
         const temperature = Math.random() * 50 + 30;
         dummyMarkers.push({
           name: `Component ${i}`,
-          type: (i % 3 === 0
-            ? "overheat-component"
-            : "robot") as Marker["type"],
+          type: (i % 3 === 0 ? "station" : "robot") as Marker["type"],
           temperature: temperature,
-          positions: [{ lat, lon, heading: Math.random() * 360 }],
+          positions: { lat, lon, heading: Math.random() * 360 },
         });
       }
       setMarkers(dummyMarkers);
@@ -60,12 +59,26 @@ export default function AreaPage() {
         <Separator />
         <section className="w-full  h-full grid grid-cols-2 gap-2">
           <section className="h-full grid grid-rows-3 gap-2">
-            <Card className="h-full w-full py-0 overflow-hidden">
+            <Tabs defaultValue="account" className="w-full">
+              <TabsList className="w-full">
+                <TabsTrigger value="account">Robot</TabsTrigger>
+                <TabsTrigger value="password">Routes</TabsTrigger>
+                <TabsTrigger value="password">Mission</TabsTrigger>
+                <TabsTrigger value="password">Configuration</TabsTrigger>
+              </TabsList>
+              <TabsContent value="account">
+                Make changes to your account here.
+              </TabsContent>
+              <TabsContent value="password">
+                Change your password here.
+              </TabsContent>
+            </Tabs>
+            {/* <Card className="h-full w-full py-0 overflow-hidden">
               <CardHeader className="flex flex-col space-y-2 bg-secondary text-center">
                 <h2 className="py-1 font-semibold mx-auto">Robot List</h2>
               </CardHeader>
               <CardContent className="p-4 space-y-2"></CardContent>
-            </Card>
+            </Card>/h
             <Card className="h-full w-full py-0 overflow-hidden">
               <CardHeader className="flex flex-col space-y-2 bg-secondary text-center">
                 <h2 className="py-1 font-semibold mx-auto">Route List</h2>
@@ -77,7 +90,7 @@ export default function AreaPage() {
                 <h2 className="py-1 font-semibold mx-auto">Mission Result</h2>
               </CardHeader>
               <CardContent className="p-4 space-y-2"></CardContent>
-            </Card>
+            </Card> */}
           </section>
 
           <section className="w-full h-full">

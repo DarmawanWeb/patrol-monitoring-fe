@@ -1,4 +1,3 @@
-// components/MapComponent.tsx
 "use client";
 import React, { FC, useEffect, useState } from "react";
 import {
@@ -16,10 +15,13 @@ import L from "leaflet";
 import useTileStore from "@/stores/use-tile-store";
 import { HeatmapLayer } from "./heatmap-layer";
 import { stadiaMapsApiKey } from "@/lib/env";
+import MarkerPopup from "./marker-popup";
 
 export interface IPosition {
   lat: number;
   lon: number;
+  sog?: number;
+  cog?: number;
   heading: number;
 }
 
@@ -29,8 +31,9 @@ export interface MarkerData {
   type: "robot" | "station" | "overheat-component";
   battery?: number;
   imageUrl?: string;
-  temperature?: number; // Temperature for overheating components
-  positions: IPosition[];
+  temperature?: number;
+  positions: IPosition;
+  timestamp?: string; // ISO string
 }
 
 export interface MapComponentProps {
@@ -43,14 +46,13 @@ const MapComponent: FC<MapComponentProps> = ({ markers }) => {
 
   useEffect(() => {
     if (markers) {
-      // Update heatmap data based on temperature
       setHeatData(
         markers
           .filter((marker) => marker.temperature)
           .map((marker) => [
-            marker.positions[0].lat,
-            marker.positions[0].lon,
-            marker.temperature!, // Use temperature as intensity for heatmap
+            marker.positions.lat,
+            marker.positions.lon,
+            marker.temperature!,
           ])
       );
     }
@@ -82,12 +84,12 @@ const MapComponent: FC<MapComponentProps> = ({ markers }) => {
 
   return (
     <MapContainer
-      center={[-8.452174, 115.843191]}
+      center={[-7.452174, 115.843191]}
       zoom={12}
       maxZoom={18}
       style={{ height: "100%", width: "100%" }}
       className="w-full h-full z-0"
-      zoomControl={false}
+      zoomControl={true}
     >
       <LayerChangeHandler />
       <LayersControl position="bottomleft">
@@ -129,8 +131,8 @@ const MapComponent: FC<MapComponentProps> = ({ markers }) => {
             points={(markers ?? [])
               .filter((marker) => marker.type === "overheat-component")
               .map((marker) => [
-                marker.positions[0].lat,
-                marker.positions[0].lon,
+                marker.positions.lat,
+                marker.positions.lon,
                 marker.temperature ? marker.temperature / 50 : 0,
               ])}
           />
@@ -138,33 +140,14 @@ const MapComponent: FC<MapComponentProps> = ({ markers }) => {
       )}
 
       {markers?.map((marker, index) => {
-        const { lat, lon } = marker.positions[0];
+        const { lat, lon } = marker.positions;
         return (
           <Marker
             key={index}
             position={[lat, lon]}
-            icon={getIcon(marker.positions[0].heading, marker.type)}
+            icon={getIcon(marker.positions.heading, marker.type)}
           >
-            <Popup>
-              <div>
-                <strong>{marker.name}</strong>
-                {/* <br />
-                {marker.type === "overheat-component" && (
-                  <>
-                    <span>Temperature: {marker.temperature}°C</span>
-                    <br />
-                    {marker.temperature! > 60 ? (
-                      <span style={{ color: "red" }}>Overheating!</span>
-                    ) : (
-                      <span style={{ color: "green" }}>Normal</span>
-                    )}
-                  </>
-                )}
-                {marker.type === "robot" && (
-                  <span>Status: {marker.status}</span>
-                )} */}
-              </div>
-            </Popup>
+            <MarkerPopup marker={marker} />
           </Marker>
         );
       })}

@@ -8,6 +8,7 @@ import Providers from "@/components/layout/providers";
 import NextTopLoader from "nextjs-toploader";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { siteConfig } from "@/constant/config";
+import ChatComponent from "@/components/chat";
 import ThemeProvider from "@/components/layout/ThemeToggle/theme-provider";
 
 const popins = Poppins({
@@ -77,6 +78,7 @@ export default async function RootLayout({
               <Toaster />
 
               {children}
+              <ChatComponent />
             </Providers>
           </ThemeProvider>
         </NuqsAdapter>
