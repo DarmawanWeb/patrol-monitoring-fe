@@ -22,7 +22,7 @@ export default function RobotsCard({ data }: { data: RobotsCardProps[] }) {
     <>
       {data.map((item) => (
         <Link
-          href={`/dashboard/projects/${item.id}`}
+          href={`/dashboard/robots/${item.id}`}
           key={item.id}
           className="hover:scale-105 transform transition-all duration-200"
         >

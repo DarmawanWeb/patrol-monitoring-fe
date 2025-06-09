@@ -30,7 +30,13 @@ const nextConfig: NextConfig = {
         hostname: "www.therobotreport.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "https://video-server.agus-darmawan.com",
+        pathname: "/**",
+      },
     ],
+    domains: ["video-server.agus-darmawan.com"],
   },
 };
 
