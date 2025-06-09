@@ -4,4 +4,6 @@ const stadiaMapsApiKey = process.env.NEXT_PUBLIC_STADIA_MAPS_API_KEY || "";
 
 const mapsTileApiKey = process.env.NEXT_PUBLIC_MAPS_TILE_API_KEY || "";
 
-export { apiUrl, stadiaMapsApiKey, mapsTileApiKey };
+const geminiApiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY || "";
+
+export { apiUrl, stadiaMapsApiKey, mapsTileApiKey, geminiApiKey };

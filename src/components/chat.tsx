@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { GoogleGenAI } from "@google/genai";
 import {
   Dialog,
@@ -11,36 +11,25 @@ import {
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
-import { Bot, Send } from "lucide-react";
+import { Bot, Send, Loader2 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import { geminiApiKey } from "@/lib/env";
+
+type Message = {
+  type: "user" | "chatbot";
+  content: string;
+};
 
 export default function ChatComponent() {
-  const [messages, setMessages] = useState([
-    {
-      type: "chatbot",
-      content: "Hello! I'm the Acme Chatbot. How can I assist you today?",
-    },
-    {
-      type: "user",
-      content:
-        "Hi there! I'm wondering if you can help me with a question about your product?",
-    },
-    {
-      type: "chatbot",
-      content: "Absolutely, I'd be happy to help. What's your question?",
-    },
-    {
-      type: "user",
-      content:
-        "I'm wondering about the pricing for your enterprise plan. Can you provide some more details?",
-    },
-  ]);
-
+  const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const ai = new GoogleGenAI({
-    apiKey: "AIzaSyBu4lTdR36gcmT0hfM0ITfFjcCzTgftvxU",
+    apiKey: geminiApiKey,
   });
+
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
   const handleSendMessage = async () => {
     if (newMessage.trim()) {
@@ -52,6 +41,7 @@ export default function ChatComponent() {
         },
       ]);
       setNewMessage("");
+      setIsLoading(true);
 
       try {
         const response = await ai.models.generateContent({
@@ -75,9 +65,26 @@ export default function ChatComponent() {
             content: "Oops, something went wrong. Please try again.",
           },
         ]);
+      } finally {
+        setIsLoading(false);
       }
     }
   };
+
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      handleSendMessage();
+    }
+  };
+
+  // Scroll to bottom whenever messages are updated
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   return (
     <div className="fixed bottom-10 right-10">
@@ -93,42 +100,48 @@ export default function ChatComponent() {
         <DialogContent className="sm:max-w-[500px] w-full h-[600px] flex flex-col">
           <DialogHeader className="border-b">
             <DialogTitle className="text-lg font-medium text-center">
-              Patrol Monitoring Chatbot
+              Gyh Patrol Monitoring Asistant
             </DialogTitle>
           </DialogHeader>
-          <div className="flex-1 overflow-auto p-4">
-            <div className="grid gap-4">
-              {messages.map((message, index) => (
+          <div
+            ref={chatContainerRef} // Add ref for scroll handling
+            className="flex-1 overflow-auto p-4 space-y-4"
+          >
+            {messages.map((message, index) => (
+              <div
+                key={index}
+                className={`flex items-start gap-3 ${
+                  message.type === "user" ? "justify-end" : ""
+                }`}
+              >
+                {message.type === "chatbot" && (
+                  <Avatar className="w-8 h-8 border">
+                    <AvatarImage src="/placeholder-user.jpg" alt="Chatbot" />
+                    <AvatarFallback>GYH</AvatarFallback>
+                  </Avatar>
+                )}
                 <div
-                  key={index}
-                  className={`flex items-start gap-3 ${
-                    message.type === "user" ? "justify-end" : ""
-                  }`}
+                  className={`${
+                    message.type === "chatbot"
+                      ? "bg-primary/55"
+                      : "bg-secondary"
+                  } rounded-lg p-3 max-w-[80%] text-sm prose prose-sm dark:prose-invert break-words`}
                 >
-                  {message.type === "chatbot" && (
-                    <Avatar className="w-8 h-8 border">
-                      <AvatarImage src="/placeholder-user.jpg" alt="Chatbot" />
-                      <AvatarFallback>CB</AvatarFallback>
-                    </Avatar>
-                  )}
-                  <div
-                    className={`${
-                      message.type === "chatbot"
-                        ? "bg-primary/55"
-                        : "bg-secondary"
-                    } rounded-lg p-3 max-w-[80%] prose prose-sm dark:prose-invert`}
-                  >
-                    <ReactMarkdown>{message.content}</ReactMarkdown>
-                  </div>
-                  {message.type === "user" && (
-                    <Avatar className="w-8 h-8 border">
-                      <AvatarImage src="/placeholder-user.jpg" alt="User" />
-                      <AvatarFallback>JD</AvatarFallback>
-                    </Avatar>
-                  )}
+                  <ReactMarkdown>{message.content}</ReactMarkdown>
                 </div>
-              ))}
-            </div>
+                {message.type === "user" && (
+                  <Avatar className="w-8 h-8 border">
+                    <AvatarImage src="/placeholder-user.jpg" alt="User" />
+                    <AvatarFallback>DAR</AvatarFallback>
+                  </Avatar>
+                )}
+              </div>
+            ))}
+            {isLoading && (
+              <div className="flex justify-center items-center w-full">
+                <Loader2 className="animate-spin w-6 h-6 text-primary" />
+              </div>
+            )}
           </div>
           <div className="border-t p-2">
             <div className="relative">
@@ -139,7 +152,8 @@ export default function ChatComponent() {
                 rows={1}
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
-                className="min-h-[48px] rounded-2xl resize-none p-4 border border-neutral-400 shadow-sm pr-16"
+                onKeyDown={handleKeyPress}
+                className="min-h-[48px] rounded-2xl resize-none p-4 border border-neutral-400 shadow-sm pr-16 text-sm"
               />
               <Button
                 type="button"
