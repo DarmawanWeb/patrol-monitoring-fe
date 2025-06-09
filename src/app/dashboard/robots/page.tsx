@@ -2,6 +2,7 @@ import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import PageContainer from "@/components/layout/page-container";
 import RobotsCard from "./_components/robot-card";
+
 // Dummy data for robots with the provided image URL
 const dummyData = [
   {
