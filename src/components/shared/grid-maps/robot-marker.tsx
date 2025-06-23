@@ -1,5 +1,5 @@
 import { Navigation } from "lucide-react";
-import type React from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 interface Robot {
   id: string;
@@ -14,15 +14,38 @@ interface RobotMarkersProps {
   rosToScreen: (x: number, y: number) => { x: number; y: number };
 }
 
-const RobotMarkers: React.FC<RobotMarkersProps> = ({ robots, rosToScreen }) => {
+export default function RobotMarkers({
+  robots,
+  rosToScreen,
+}: RobotMarkersProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
+  const handleClick = (robotId: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("robotId", robotId);
+    router.push(`${pathname}?${params.toString()}`);
+  };
+
+  const handleKeyPress = (
+    event: React.KeyboardEvent<HTMLElement>,
+    robotId: string
+  ) => {
+    if (event.key === "Enter" || event.key === " ") {
+      handleClick(robotId);
+    }
+  };
+
   return (
     <>
       {robots.map((robot, index) => {
         const screenPos = rosToScreen(robot.location.x, robot.location.y);
-        const robotColor = robot.color || `hsl(${(index * 137.5) % 360}, 70%, 50%)`;
+        const robotColor =
+          robot.color || `hsl(${(index * 137.5) % 360}, 70%, 50%)`;
 
         return (
-          <div
+          <section
             key={robot.id}
             className="absolute z-50"
             style={{
@@ -30,6 +53,9 @@ const RobotMarkers: React.FC<RobotMarkersProps> = ({ robots, rosToScreen }) => {
               top: `${screenPos.y}px`,
               transform: `translate(-50%, -50%)`,
             }}
+            onClick={() => handleClick(robot.id)}
+            onKeyUp={(event) => handleKeyPress(event, robot.id)}
+            aria-label={`Select robot ${robot.name || robot.id}`}
           >
             <div
               className="absolute inset-0 h-8 w-8 animate-pulse rounded-full blur-lg"
@@ -54,11 +80,9 @@ const RobotMarkers: React.FC<RobotMarkersProps> = ({ robots, rosToScreen }) => {
                 </div>
               </div>
             )}
-          </div>
+          </section>
         );
       })}
     </>
   );
-};
-
-export default RobotMarkers;
+}

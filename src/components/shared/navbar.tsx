@@ -12,6 +12,7 @@ export default function Navbar() {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
+  if (!currentTime) return null;
 
   return (
     <div className="absolute top-0 right-0 left-0 z-50 h-16 border-slate-700/50 border-b bg-slate-900/90 backdrop-blur-sm">

@@ -1,3 +1,4 @@
+import BottomMenu from "@/components/shared/bottom-menu";
 import GridMap from "@/components/shared/grid-maps/index";
 import Navbar from "@/components/shared/navbar";
 export default function Home() {
@@ -22,6 +23,7 @@ export default function Home() {
           },
         ]}
       />
+      <BottomMenu />
     </main>
   );
 }
