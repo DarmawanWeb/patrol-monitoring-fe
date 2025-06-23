@@ -1,0 +1,9 @@
+export const MAP_CONFIG = {
+  SIZE: 1500,
+  GRID_SIZE: 50,
+  MAJOR_GRID_INTERVAL: 5,
+  MAX_ZOOM: 1.5,
+  MIN_ZOOM: 0.5,
+  ZOOM_STEP: 0.25,
+  WHEEL_SENSITIVITY: 0.3,
+};
