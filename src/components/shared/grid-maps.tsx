@@ -330,7 +330,7 @@ const GridMap = ({ location, popupMessage }: MarkerProps) => {
       </div>
 
       {/* Control Panel */}
-      <div className="absolute top-5 right-5 z-50 rounded-xl border border-white/20 bg-black/80 p-5 backdrop-blur-sm">
+      {/* <div className="absolute top-5 right-5 z-50 rounded-xl border border-white/20 bg-black/80 p-5 backdrop-blur-sm">
         <div className="flex flex-col gap-3">
           <Button
             onClick={zoomIn}
@@ -351,7 +351,7 @@ const GridMap = ({ location, popupMessage }: MarkerProps) => {
             <Square size={20} className="mx-auto" />
           </Button>
         </div>
-      </div>
+      </div> */}
 
       {/* Info Panel */}
       <div className="absolute bottom-5 left-5 z-50 min-w-48 rounded-lg border border-white/20 bg-black/80 p-4 backdrop-blur-sm">
