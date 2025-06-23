@@ -14,10 +14,7 @@ interface RobotMarkersProps {
   rosToScreen: (x: number, y: number) => { x: number; y: number };
 }
 
-export default function RobotMarkers({
-  robots,
-  rosToScreen,
-}: RobotMarkersProps) {
+export default function RobotMarkers({ robots, rosToScreen }: RobotMarkersProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -28,10 +25,7 @@ export default function RobotMarkers({
     router.push(`${pathname}?${params.toString()}`);
   };
 
-  const handleKeyPress = (
-    event: React.KeyboardEvent<HTMLElement>,
-    robotId: string
-  ) => {
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLElement>, robotId: string) => {
     if (event.key === "Enter" || event.key === " ") {
       handleClick(robotId);
     }
@@ -41,8 +35,7 @@ export default function RobotMarkers({
     <>
       {robots.map((robot, index) => {
         const screenPos = rosToScreen(robot.location.x, robot.location.y);
-        const robotColor =
-          robot.color || `hsl(${(index * 137.5) % 360}, 70%, 50%)`;
+        const robotColor = robot.color || `hsl(${(index * 137.5) % 360}, 70%, 50%)`;
 
         return (
           <section

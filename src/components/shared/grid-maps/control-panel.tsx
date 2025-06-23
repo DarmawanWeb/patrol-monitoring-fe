@@ -11,7 +11,7 @@ interface ControlPanelProps {
 export default function ControlPanel({ onZoomIn, onZoomOut, onResetView }: ControlPanelProps) {
   return (
     <section className="-translate-y-1/2 absolute top-1/2 right-4 z-50 transform">
-      <Card className="border-slate-700/50 bg-slate-900/90 p-2 backdrop-blur-sm">
+      <Card className=" border-slate-700/50 bg-slate-800/70 p-2 backdrop-blur-sm">
         <div className="flex flex-col gap-1 space-y-2">
           <Button
             onClick={onZoomIn}
