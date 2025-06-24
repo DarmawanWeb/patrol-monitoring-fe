@@ -1,28 +1,19 @@
 "use client";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Dog, Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 const schema = z.object({
   username: z.string().min(1, "Username is required"),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters")
-    .nonempty("Password is required"),
+  password: z.string().min(8, "Password must be at least 8 characters").nonempty("Password is required"),
 });
 
 export default function AuthPages() {
@@ -50,43 +41,32 @@ export default function AuthPages() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+    <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
+      <section className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="-top-40 -right-40 absolute h-80 w-80 rounded-full bg-gradient-to-br from-cyan-500/10 to-blue-600/10 blur-3xl"></div>
         <div className="-bottom-40 -left-40 absolute h-80 w-80 rounded-full bg-gradient-to-br from-purple-500/10 to-pink-600/10 blur-3xl"></div>
-      </div>
+      </section>
 
       <div className="relative w-full max-w-md">
-        <div className="mb-8 text-center">
+        <section className="mb-8 text-center">
           <div className="relative mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 shadow-lg">
             <Dog size={28} className="text-white" />
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-400/20 to-transparent"></div>
           </div>
-          <h1 className="font-bold text-3xl text-white tracking-tight">
-            HotDogTracker
-          </h1>
-          <p className="mt-1 text-slate-400 text-sm">
-            Real-time Monitoring Platform
-          </p>
-        </div>
+          <h1 className="font-bold text-3xl text-white tracking-tight">HotDogTracker</h1>
+          <p className="mt-1 text-slate-400 text-sm">Real-time Monitoring Platform</p>
+        </section>
 
         <Card className="border-slate-700/50 bg-slate-800/50 shadow-2xl backdrop-blur-sm">
           <CardHeader className="space-y-1 pb-0">
-            <CardTitle className="font-bold text-2xl text-white">
-              Welcome Back
-            </CardTitle>
-            <CardDescription className="text-slate-400">
-              Sign in to your account to continue monitoring
-            </CardDescription>
+            <CardTitle className="font-bold text-2xl text-white">Welcome Back</CardTitle>
+            <CardDescription className="text-slate-400">Sign in to your account to continue monitoring</CardDescription>
           </CardHeader>
 
           <CardContent className="space-y-4">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="space-y-2">
-                <Label
-                  htmlFor="username"
-                  className="font-medium text-slate-300"
-                >
+                <Label htmlFor="username" className="font-medium text-slate-300">
                   Username
                 </Label>
                 <Input
@@ -94,25 +74,18 @@ export default function AuthPages() {
                   {...register("username")}
                   placeholder="Enter your username"
                   className={`border-slate-600/50 bg-slate-700/50 text-white placeholder:text-slate-400 focus:border-cyan-500/50 focus:ring-cyan-500/50 ${
-                    errors.username
-                      ? "border-red-500/50 focus:border-red-500/50 focus:ring-red-500/50"
-                      : ""
+                    errors.username ? "border-red-500/50 focus:border-red-500/50 focus:ring-red-500/50" : ""
                   }`}
                 />
                 {errors.username && (
                   <Alert className="border-red-500/20 bg-red-500/10 py-2">
-                    <AlertDescription className="text-red-400 text-sm">
-                      {errors.username.message}
-                    </AlertDescription>
+                    <AlertDescription className="text-red-400 text-sm">{errors.username.message}</AlertDescription>
                   </Alert>
                 )}
               </div>
 
               <div className="space-y-2">
-                <Label
-                  htmlFor="password"
-                  className="font-medium text-slate-300"
-                >
+                <Label htmlFor="password" className="font-medium text-slate-300">
                   Password
                 </Label>
                 <div className="relative">
@@ -122,9 +95,7 @@ export default function AuthPages() {
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
                     className={`border-slate-600/50 bg-slate-700/50 pr-10 text-white placeholder:text-slate-400 focus:border-cyan-500/50 focus:ring-cyan-500/50 ${
-                      errors.password
-                        ? "border-red-500/50 focus:border-red-500/50 focus:ring-red-500/50"
-                        : ""
+                      errors.password ? "border-red-500/50 focus:border-red-500/50 focus:ring-red-500/50" : ""
                     }`}
                   />
                   <Button
@@ -139,9 +110,7 @@ export default function AuthPages() {
                 </div>
                 {errors.password && (
                   <Alert className="border-red-500/20 bg-red-500/10 py-2">
-                    <AlertDescription className="text-red-400 text-sm">
-                      {errors.password.message}
-                    </AlertDescription>
+                    <AlertDescription className="text-red-400 text-sm">{errors.password.message}</AlertDescription>
                   </Alert>
                 )}
               </div>
@@ -164,25 +133,19 @@ export default function AuthPages() {
           </CardContent>
         </Card>
 
-        <div className="mt-8 text-center">
+        <footer className="mt-8 text-center">
           <p className="text-slate-500 text-xs">
             By continuing, you agree to our{" "}
-            <Button
-              variant="link"
-              className="h-auto p-0 text-slate-400 text-xs underline hover:text-slate-300"
-            >
+            <Button variant="link" className="h-auto p-0 text-slate-400 text-xs underline hover:text-slate-300">
               Terms of Service
             </Button>{" "}
             and{" "}
-            <Button
-              variant="link"
-              className="h-auto p-0 text-slate-400 text-xs underline hover:text-slate-300"
-            >
+            <Button variant="link" className="h-auto p-0 text-slate-400 text-xs underline hover:text-slate-300">
               Privacy Policy
             </Button>
           </p>
-        </div>
+        </footer>
       </div>
-    </div>
+    </main>
   );
 }
