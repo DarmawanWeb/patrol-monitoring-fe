@@ -1,68 +1,52 @@
 "use client";
 import { Dog, Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useId, useState } from "react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
+const schema = z.object({
+  username: z.string().min(1, "Username is required"),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .nonempty("Password is required"),
+});
 
 export default function AuthPages() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    username: "",
-    password: "",
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm({
+    resolver: zodResolver(schema),
   });
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
   const [isLoading, setIsLoading] = useState(false);
 
-  // Generate unique ids
-  const usernameId = useId();
-  const passwordId = useId();
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-    if (errors[name]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: "",
-      }));
-    }
-  };
-
-  const validateForm = () => {
-    const newErrors: { [key: string]: string } = {};
-
-    if (!formData.username.trim()) {
-      newErrors.username = "Username is required";
-    }
-
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-    } else if (formData.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (validateForm()) {
-      setIsLoading(true);
-      setTimeout(() => {
-        setIsLoading(false);
-        console.log("Form submitted:", formData);
-        router.push("/");
-      }, 2000);
-    }
+  const onSubmit = async (data: { username: string; password: string }) => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      console.log("Form submitted:", data);
+      router.push("/");
+    }, 2000);
   };
 
   return (
@@ -78,56 +62,69 @@ export default function AuthPages() {
             <Dog size={28} className="text-white" />
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-400/20 to-transparent"></div>
           </div>
-          <h1 className="font-bold text-3xl text-white tracking-tight">HotDogTracker</h1>
-          <p className="mt-1 text-slate-400 text-sm">Real-time Monitoring Platform</p>
+          <h1 className="font-bold text-3xl text-white tracking-tight">
+            HotDogTracker
+          </h1>
+          <p className="mt-1 text-slate-400 text-sm">
+            Real-time Monitoring Platform
+          </p>
         </div>
 
         <Card className="border-slate-700/50 bg-slate-800/50 shadow-2xl backdrop-blur-sm">
           <CardHeader className="space-y-1 pb-0">
-            <CardTitle className="font-bold text-2xl text-white">Welcome Back</CardTitle>
-            <CardDescription className="text-slate-400">Sign in to your account to continue monitoring</CardDescription>
+            <CardTitle className="font-bold text-2xl text-white">
+              Welcome Back
+            </CardTitle>
+            <CardDescription className="text-slate-400">
+              Sign in to your account to continue monitoring
+            </CardDescription>
           </CardHeader>
 
           <CardContent className="space-y-4">
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Username field */}
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor={usernameId} className="font-medium text-slate-300">
+                <Label
+                  htmlFor="username"
+                  className="font-medium text-slate-300"
+                >
                   Username
                 </Label>
                 <Input
-                  id={usernameId}
-                  name="username"
-                  type="text"
-                  value={formData.username}
-                  onChange={handleInputChange}
+                  id="username"
+                  {...register("username")}
                   placeholder="Enter your username"
                   className={`border-slate-600/50 bg-slate-700/50 text-white placeholder:text-slate-400 focus:border-cyan-500/50 focus:ring-cyan-500/50 ${
-                    errors.username ? "border-red-500/50 focus:border-red-500/50 focus:ring-red-500/50" : ""
+                    errors.username
+                      ? "border-red-500/50 focus:border-red-500/50 focus:ring-red-500/50"
+                      : ""
                   }`}
                 />
                 {errors.username && (
                   <Alert className="border-red-500/20 bg-red-500/10 py-2">
-                    <AlertDescription className="text-red-400 text-sm">{errors.username}</AlertDescription>
+                    <AlertDescription className="text-red-400 text-sm">
+                      {errors.username.message}
+                    </AlertDescription>
                   </Alert>
                 )}
               </div>
 
-              {/* Password field */}
               <div className="space-y-2">
-                <Label htmlFor={passwordId} className="font-medium text-slate-300">
+                <Label
+                  htmlFor="password"
+                  className="font-medium text-slate-300"
+                >
                   Password
                 </Label>
                 <div className="relative">
                   <Input
-                    id={passwordId}
-                    name="password"
+                    id="password"
+                    {...register("password")}
                     type={showPassword ? "text" : "password"}
-                    value={formData.password}
-                    onChange={handleInputChange}
                     placeholder="Enter your password"
                     className={`border-slate-600/50 bg-slate-700/50 pr-10 text-white placeholder:text-slate-400 focus:border-cyan-500/50 focus:ring-cyan-500/50 ${
-                      errors.password ? "border-red-500/50 focus:border-red-500/50 focus:ring-red-500/50" : ""
+                      errors.password
+                        ? "border-red-500/50 focus:border-red-500/50 focus:ring-red-500/50"
+                        : ""
                     }`}
                   />
                   <Button
@@ -142,12 +139,13 @@ export default function AuthPages() {
                 </div>
                 {errors.password && (
                   <Alert className="border-red-500/20 bg-red-500/10 py-2">
-                    <AlertDescription className="text-red-400 text-sm">{errors.password}</AlertDescription>
+                    <AlertDescription className="text-red-400 text-sm">
+                      {errors.password.message}
+                    </AlertDescription>
                   </Alert>
                 )}
               </div>
 
-              {/* Submit Button */}
               <Button
                 type="submit"
                 disabled={isLoading}
@@ -169,11 +167,17 @@ export default function AuthPages() {
         <div className="mt-8 text-center">
           <p className="text-slate-500 text-xs">
             By continuing, you agree to our{" "}
-            <Button variant="link" className="h-auto p-0 text-slate-400 text-xs underline hover:text-slate-300">
+            <Button
+              variant="link"
+              className="h-auto p-0 text-slate-400 text-xs underline hover:text-slate-300"
+            >
               Terms of Service
             </Button>{" "}
             and{" "}
-            <Button variant="link" className="h-auto p-0 text-slate-400 text-xs underline hover:text-slate-300">
+            <Button
+              variant="link"
+              className="h-auto p-0 text-slate-400 text-xs underline hover:text-slate-300"
+            >
               Privacy Policy
             </Button>
           </p>

@@ -31,7 +31,6 @@ const GridMap: React.FC<GridMapProps> = ({ robots = [] }) => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<HTMLDivElement | null>(null);
 
-  // Helper functions for coordinate conversions
   const rosToScreen = useCallback((x: number, y: number) => {
     return {
       x: x + MAP_CONFIG.SIZE / 2,
@@ -50,50 +49,65 @@ const GridMap: React.FC<GridMapProps> = ({ robots = [] }) => {
     if (!mapContainerRef.current) return MAP_CONFIG.MIN_ZOOM;
     const containerW = mapContainerRef.current.clientWidth;
     const containerH = mapContainerRef.current.clientHeight;
-    return Math.max(containerW / MAP_CONFIG.SIZE, containerH / MAP_CONFIG.SIZE, MAP_CONFIG.MIN_ZOOM);
+    return Math.max(
+      containerW / MAP_CONFIG.SIZE,
+      containerH / MAP_CONFIG.SIZE,
+      MAP_CONFIG.MIN_ZOOM
+    );
   }, []);
 
-  const constrainPanning = useCallback((newTranslateX: number, newTranslateY: number, currentScale: number) => {
-    if (!mapContainerRef.current) return { x: newTranslateX, y: newTranslateY };
+  const constrainPanning = useCallback(
+    (newTranslateX: number, newTranslateY: number, currentScale: number) => {
+      if (!mapContainerRef.current)
+        return { x: newTranslateX, y: newTranslateY };
 
-    const containerW = mapContainerRef.current.clientWidth;
-    const containerH = mapContainerRef.current.clientHeight;
-    const scaledMapW = MAP_CONFIG.SIZE * currentScale;
-    const scaledMapH = MAP_CONFIG.SIZE * currentScale;
+      const containerW = mapContainerRef.current.clientWidth;
+      const containerH = mapContainerRef.current.clientHeight;
+      const scaledMapW = MAP_CONFIG.SIZE * currentScale;
+      const scaledMapH = MAP_CONFIG.SIZE * currentScale;
 
-    let constrainedX = newTranslateX;
-    let constrainedY = newTranslateY;
+      let constrainedX = newTranslateX;
+      let constrainedY = newTranslateY;
 
-    if (scaledMapW > containerW) {
-      const maxX = 0;
-      const minX = containerW - scaledMapW;
-      constrainedX = Math.max(minX, Math.min(maxX, newTranslateX));
-    } else {
-      constrainedX = (containerW - scaledMapW) / 2;
-    }
+      if (scaledMapW > containerW) {
+        const maxX = 0;
+        const minX = containerW - scaledMapW;
+        constrainedX = Math.max(minX, Math.min(maxX, newTranslateX));
+      } else {
+        constrainedX = (containerW - scaledMapW) / 2;
+      }
 
-    if (scaledMapH > containerH) {
-      const maxY = 0;
-      const minY = containerH - scaledMapH;
-      constrainedY = Math.max(minY, Math.min(maxY, newTranslateY));
-    } else {
-      constrainedY = (containerH - scaledMapH) / 2;
-    }
+      if (scaledMapH > containerH) {
+        const maxY = 0;
+        const minY = containerH - scaledMapH;
+        constrainedY = Math.max(minY, Math.min(maxY, newTranslateY));
+      } else {
+        constrainedY = (containerH - scaledMapH) / 2;
+      }
 
-    return { x: constrainedX, y: constrainedY };
-  }, []);
+      return { x: constrainedX, y: constrainedY };
+    },
+    []
+  );
 
   const updateTransform = useCallback(
     (newScale: number, newTranslateX: number, newTranslateY: number) => {
       const minZoom = calculateMinZoom();
-      const constrainedScale = Math.max(minZoom, Math.min(MAP_CONFIG.MAX_ZOOM, newScale));
-      const constrained = constrainPanning(newTranslateX, newTranslateY, constrainedScale);
+      const constrainedScale = Math.max(
+        minZoom,
+        Math.min(MAP_CONFIG.MAX_ZOOM, newScale)
+      );
+      const constrained = constrainPanning(
+        newTranslateX,
+        newTranslateY,
+        constrainedScale
+      );
 
       setScale(constrainedScale);
       setTranslateX(constrained.x);
       setTranslateY(constrained.y);
     },
-    [calculateMinZoom, constrainPanning],
+    [calculateMinZoom, constrainPanning]
   );
 
   const performZoom = useCallback(
@@ -108,7 +122,7 @@ const GridMap: React.FC<GridMapProps> = ({ robots = [] }) => {
 
       updateTransform(newScale, newTranslateX, newTranslateY);
     },
-    [scale, translateX, translateY, updateTransform],
+    [scale, translateX, translateY, updateTransform]
   );
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -128,7 +142,7 @@ const GridMap: React.FC<GridMapProps> = ({ robots = [] }) => {
 
       updateTransform(scale, newTranslateX, newTranslateY);
     },
-    [isDragging, dragStart, scale, updateTransform],
+    [isDragging, dragStart, scale, updateTransform]
   );
 
   const handleMouseUp = useCallback(() => {
@@ -142,7 +156,10 @@ const GridMap: React.FC<GridMapProps> = ({ robots = [] }) => {
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
 
-    const zoomFactor = e.deltaY > 0 ? 1 - MAP_CONFIG.WHEEL_SENSITIVITY : 1 + MAP_CONFIG.WHEEL_SENSITIVITY;
+    const zoomFactor =
+      e.deltaY > 0
+        ? 1 - MAP_CONFIG.WHEEL_SENSITIVITY
+        : 1 + MAP_CONFIG.WHEEL_SENSITIVITY;
     performZoom(zoomFactor, mouseX, mouseY);
   };
 
@@ -161,7 +178,11 @@ const GridMap: React.FC<GridMapProps> = ({ robots = [] }) => {
   const resetView = useCallback(() => {
     const containerW = mapContainerRef.current!.clientWidth;
     const containerH = mapContainerRef.current!.clientHeight;
-    updateTransform(1, containerW / 2 - MAP_CONFIG.SIZE / 2, containerH / 2 - MAP_CONFIG.SIZE / 2);
+    updateTransform(
+      1,
+      containerW / 2 - MAP_CONFIG.SIZE / 2,
+      containerH / 2 - MAP_CONFIG.SIZE / 2
+    );
   }, [updateTransform]);
 
   useEffect(() => {
@@ -197,7 +218,9 @@ const GridMap: React.FC<GridMapProps> = ({ robots = [] }) => {
     <section className="relative h-screen w-screen overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       <section
         ref={mapContainerRef}
-        className={`relative h-full w-full bg-slate-900 ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
+        className={`relative h-full w-full bg-slate-900 ${
+          isDragging ? "cursor-grabbing" : "cursor-grab"
+        }`}
         onMouseDown={handleMouseDown}
         onWheel={handleWheel}
         aria-label="Interactive map"
@@ -217,8 +240,16 @@ const GridMap: React.FC<GridMapProps> = ({ robots = [] }) => {
         </div>
       </section>
 
-      <ControlPanel onZoomIn={zoomIn} onZoomOut={zoomOut} onResetView={resetView} />
-      <StatusPanel scale={scale} currentCenter={currentCenter()} robots={robots} />
+      <ControlPanel
+        onZoomIn={zoomIn}
+        onZoomOut={zoomOut}
+        onResetView={resetView}
+      />
+      <StatusPanel
+        scale={scale}
+        currentCenter={currentCenter()}
+        robots={robots}
+      />
     </section>
   );
 };
