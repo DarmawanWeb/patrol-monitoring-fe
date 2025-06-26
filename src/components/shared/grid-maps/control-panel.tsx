@@ -8,7 +8,11 @@ interface ControlPanelProps {
   onResetView: () => void;
 }
 
-export default function ControlPanel({ onZoomIn, onZoomOut, onResetView }: ControlPanelProps) {
+export default function ControlPanel({
+  onZoomIn,
+  onZoomOut,
+  onResetView,
+}: ControlPanelProps) {
   return (
     <section className="-translate-y-1/2 absolute top-1/2 right-4 z-50 transform">
       <Card className=" border-slate-700/50 bg-slate-800/70 p-2 backdrop-blur-sm">

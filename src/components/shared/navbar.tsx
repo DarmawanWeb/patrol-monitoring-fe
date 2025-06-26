@@ -19,12 +19,20 @@ export default function Navbar() {
       <div className="flex h-full items-center justify-between px-6">
         <section className="flex items-center space-x-6">
           <div className="flex flex-col">
-            <div className="font-medium text-slate-400 text-xs uppercase tracking-wide">UTC TIME</div>
-            <div className=" font-bold text-lg text-white">{formatTime(currentTime)}</div>
+            <div className="font-medium text-slate-400 text-xs uppercase tracking-wide">
+              UTC TIME
+            </div>
+            <div className=" font-bold text-lg text-white">
+              {formatTime(currentTime)}
+            </div>
           </div>
           <div className="hidden flex-col sm:flex">
-            <div className="text-slate-400 text-xs uppercase tracking-wide">DATE</div>
-            <div className=" text-slate-300 text-sm">{formatDate(currentTime)}</div>
+            <div className="text-slate-400 text-xs uppercase tracking-wide">
+              DATE
+            </div>
+            <div className=" text-slate-300 text-sm">
+              {formatDate(currentTime)}
+            </div>
           </div>
         </section>
 
@@ -34,8 +42,12 @@ export default function Navbar() {
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-400/20 to-transparent"></div>
           </div>
           <div className="hidden flex-col md:flex">
-            <span className="font-bold text-white text-xl tracking-tight">HotDogTracker</span>
-            <span className="-mt-1 text-slate-400 text-xs">Real-time Monitoring Platform</span>
+            <span className="font-bold text-white text-xl tracking-tight">
+              HotDogTracker
+            </span>
+            <span className="-mt-1 text-slate-400 text-xs">
+              Real-time Monitoring Platform
+            </span>
           </div>
         </section>
 
@@ -46,7 +58,9 @@ export default function Navbar() {
             </div>
           </div>
           <div className="hidden flex-col items-start lg:flex">
-            <span className="font-medium text-sm text-white">Agus Darmawan</span>
+            <span className="font-medium text-sm text-white">
+              Agus Darmawan
+            </span>
             <span className="text-gray-400 text-xs">Admin</span>
           </div>
         </section>

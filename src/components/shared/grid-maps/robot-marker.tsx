@@ -14,7 +14,10 @@ interface RobotMarkersProps {
   rosToScreen: (x: number, y: number) => { x: number; y: number };
 }
 
-export default function RobotMarkers({ robots, rosToScreen }: RobotMarkersProps) {
+export default function RobotMarkers({
+  robots,
+  rosToScreen,
+}: RobotMarkersProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -25,7 +28,10 @@ export default function RobotMarkers({ robots, rosToScreen }: RobotMarkersProps)
     router.push(`${pathname}?${params.toString()}`);
   };
 
-  const handleKeyPress = (event: React.KeyboardEvent<HTMLElement>, robotId: string) => {
+  const handleKeyPress = (
+    event: React.KeyboardEvent<HTMLElement>,
+    robotId: string,
+  ) => {
     if (event.key === "Enter" || event.key === " ") {
       handleClick(robotId);
     }
@@ -35,7 +41,8 @@ export default function RobotMarkers({ robots, rosToScreen }: RobotMarkersProps)
     <>
       {robots.map((robot, index) => {
         const screenPos = rosToScreen(robot.location.x, robot.location.y);
-        const robotColor = robot.color || `hsl(${(index * 137.5) % 360}, 70%, 50%)`;
+        const robotColor =
+          robot.color || `hsl(${(index * 137.5) % 360}, 70%, 50%)`;
 
         return (
           <section
@@ -56,7 +63,7 @@ export default function RobotMarkers({ robots, rosToScreen }: RobotMarkersProps)
             ></div>
 
             <div
-              className="relative flex h-8 w-8 items-center justify-center rounded-full border-2 border-white shadow-lg"
+              className="relative flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border-2 border-white shadow-lg transition-transform hover:scale-110"
               style={{ backgroundColor: robotColor }}
             >
               <Navigation
@@ -66,13 +73,11 @@ export default function RobotMarkers({ robots, rosToScreen }: RobotMarkersProps)
               />
             </div>
 
-            {robot.name && (
-              <div className="-translate-x-1/2 absolute top-full left-1/2 mt-1 transform">
-                <div className="whitespace-nowrap rounded bg-slate-900/80 px-2 py-1 font-bold text-white text-xs">
-                  {robot.name}
-                </div>
+            <div className="-translate-x-1/2 absolute top-full left-1/2 mt-1 transform">
+              <div className="whitespace-nowrap rounded border border-slate-600 bg-slate-900/90 px-2 py-1 text-white text-xs">
+                <div className="font-bold">{robot.name || robot.id}</div>
               </div>
-            )}
+            </div>
           </section>
         );
       })}
