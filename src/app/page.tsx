@@ -1,60 +1,36 @@
-// page.tsx (updated)
+"use client";
+import { useEffect, useState } from "react";
+import { io } from "socket.io-client";
 import BottomMenu from "@/components/shared/bottom-menu";
-import GridMap from "@/components/shared/grid-maps/index";
+import GridMap from "@/components/shared/grid-maps";
 import Navbar from "@/components/shared/navbar";
 import RobotSidebar from "@/components/shared/robot-detail-sidebar";
 
-export default function Home() {
-  const robots = [
-    {
-      id: "robot1",
-      name: "Main Robot",
-      location: { x: 150, y: 200 },
-      heading: 45,
-      color: "#ff5722",
-      battery: 85,
-      status: "active",
-      speed: 1.2,
-      signal: 92,
-      lastUpdate: "2 mins ago",
-    },
-    {
-      id: "robot2",
-      name: "Scout Bot",
-      location: { x: -100, y: -50 },
-      heading: 180,
-      color: "#4caf50",
-      battery: 67,
-      status: "moving",
-      speed: 0.8,
-      signal: 78,
-      lastUpdate: "1 min ago",
-    },
-    {
-      id: "robot3",
-      name: "Patrol Unit",
-      location: { x: 50, y: -150 },
-      heading: 270,
-      color: "#2196f3",
-      battery: 23,
-      status: "idle",
-      speed: 0.0,
-      signal: 45,
-      lastUpdate: "5 mins ago",
-    },
-    {
-      id: "robot4",
-      name: "Security Bot",
-      location: { x: -200, y: 100 },
-      heading: 90,
-      speed: 1.5,
-      battery: 91,
-      color: "#9c27b0",
-      status: "active",
-      signal: 88,
-      lastUpdate: "30 secs ago",
-    },
-  ];
+export default function HomePage() {
+  const [robots, setRobots] = useState<any[]>([]);
+
+  useEffect(() => {
+    const socket = io("http://localhost:8082");
+
+    socket.on("connect", () => {
+      console.log("✅ Connected to WebSocket");
+    });
+
+    socket.on("robot:data", (data) => {
+      console.log("📡 Received robot data:", data);
+
+      setRobots((prev) => {
+        const incoming = data[0];
+
+        const updated = prev.filter((r) => r.id !== incoming.id);
+        return [...updated, incoming];
+      });
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   return (
     <main className="relative h-screen w-full bg-slate-900">

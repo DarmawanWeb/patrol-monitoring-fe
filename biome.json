@@ -7,6 +7,10 @@
   "linter": {
     "enabled": true,
     "rules": {
+      "a11y": {
+        "noStaticElementInteractions": "off",
+        "useKeyWithClickEvents": "off"
+      },
       "nursery": {
         "useSortedClasses": {
           "level": "warn",
@@ -14,7 +18,8 @@
             "attributes": ["classList"],
             "functions": ["clsx", "cva", "cn"]
           }
-        }
+        },
+        "useUniqueElementIds": "off"
       },
       "recommended": true,
       "suspicious": {
