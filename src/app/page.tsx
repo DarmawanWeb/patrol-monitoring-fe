@@ -10,7 +10,7 @@ export default function HomePage() {
   const [robots, setRobots] = useState<any[]>([]);
 
   useEffect(() => {
-    const socket = io("http://localhost:8082");
+    const socket = io("https://patrol-ws.agus-darmawan.com");
 
     socket.on("connect", () => {
       console.log("✅ Connected to WebSocket");

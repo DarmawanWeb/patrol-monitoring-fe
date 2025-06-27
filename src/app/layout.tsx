@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Toaster } from "@/components/ui/sonner";
 import "@/styles/globals.css";
 import { ThemeProvider } from "next-themes";
 import type React from "react";
@@ -40,6 +41,8 @@ export default function RootLayout({
           disableTransitionOnChange={true}
         >
           <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
+
+          <Toaster position="bottom-right" />
         </ThemeProvider>
       </body>
     </html>

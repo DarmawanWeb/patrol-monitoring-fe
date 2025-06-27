@@ -2,6 +2,7 @@
   "$schema": "https://biomejs.dev/schemas/2.0.4/schema.json",
   "formatter": {
     "indentStyle": "space",
+    "indentWidth": 2,
     "lineWidth": 80
   },
   "linter": {
@@ -13,10 +14,10 @@
       },
       "nursery": {
         "useSortedClasses": {
-          "level": "warn",
+          "level": "error",
           "options": {
-            "attributes": ["classList"],
-            "functions": ["clsx", "cva", "cn"]
+            "attributes": ["className", "classList"],
+            "functions": ["clsx", "cva", "cn", "tw"]
           }
         },
         "useUniqueElementIds": "off"
@@ -33,6 +34,11 @@
       "complexity": {
         "noForEach": "off"
       }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "semicolons": "asNeeded"
     }
   },
   "files": {

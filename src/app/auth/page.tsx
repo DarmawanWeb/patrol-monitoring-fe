@@ -1,14 +1,18 @@
 "use client";
-
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Dog, Eye, EyeOff } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import axios from "axios";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+
 import { z } from "zod";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { useForm } from "react-hook-form";
+
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   Card,
   CardContent,
@@ -16,16 +20,23 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+
+import { Dog, Eye, EyeOff } from "lucide-react";
+
+import { toast } from "sonner";
+import { apiUrl } from "@/lib/env";
+
+import { setAuthData } from "@/lib/cookie";
 
 const schema = z.object({
-  username: z.string().min(1, "Username is required"),
+  email: z.string().email("Enter a valid e-mail address"),
   password: z
     .string()
     .min(8, "Password must be at least 8 characters")
     .nonempty("Password is required"),
 });
+
+type FormValues = z.infer<typeof schema>;
 
 export default function AuthPages() {
   const router = useRouter();
@@ -36,17 +47,33 @@ export default function AuthPages() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<FormValues>({
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = async (data: { username: string; password: string }) => {
-    setIsLoading(true);
-    setTimeout(() => {
-      console.log("Form submitted:", data);
-      setIsLoading(false);
+  const onSubmit = async (data: FormValues) => {
+    try {
+      setIsLoading(true);
+      const res = await axios.post(`${apiUrl}/auth/login`, {
+        email: data.email,
+        password: data.password,
+      });
+      const { accessToken, refreshToken } = res.data.data;
+      setAuthData(accessToken, refreshToken);
+      toast.success("Signed in successfully!");
       router.push("/");
-    }, 2000);
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response) {
+        const msg =
+          (err.response.data as { message?: string })?.message ??
+          "Login failed";
+        toast.error(msg);
+      } else {
+        toast.error("Unexpected error. Please try again.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -62,17 +89,17 @@ export default function AuthPages() {
             <Dog size={28} className="text-white" />
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-400/20 to-transparent" />
           </div>
-          <h1 className="font-bold text-3xl text-white tracking-tight">
+          <h1 className="text-3xl font-bold tracking-tight text-white">
             HotDogTracker
           </h1>
-          <p className="mt-1 text-slate-400 text-sm">
+          <p className="mt-1 text-sm text-slate-400">
             Real-time Monitoring Platform
           </p>
         </section>
 
         <Card className="border-slate-700/50 bg-slate-800/50 shadow-2xl backdrop-blur-sm">
           <CardHeader className="space-y-1 pb-0">
-            <CardTitle className="font-bold text-2xl text-white">
+            <CardTitle className="text-2xl font-bold text-white">
               Welcome Back
             </CardTitle>
             <CardDescription className="text-slate-400">
@@ -82,25 +109,24 @@ export default function AuthPages() {
 
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              {/* Username Field */}
               <div className="space-y-2">
-                <Label htmlFor="username" className="text-slate-300">
-                  Username
+                <Label htmlFor="email" className="text-slate-300">
+                  E-mail
                 </Label>
                 <Input
-                  id="username"
-                  placeholder="Enter your username"
+                  id="email"
+                  placeholder="you@example.com"
                   className={`border-slate-600/50 bg-slate-700/50 text-white placeholder:text-slate-400 focus:border-cyan-500/50 focus:ring-cyan-500/50 ${
-                    errors.username
+                    errors.email
                       ? "border-red-500/50 focus:border-red-500/50 focus:ring-red-500/50"
                       : ""
                   }`}
-                  {...register("username")}
+                  {...register("email")}
                 />
-                {errors.username && (
+                {errors.email && (
                   <Alert className="border-red-500/20 bg-red-500/10 py-2">
-                    <AlertDescription className="text-red-400 text-sm">
-                      {errors.username.message}
+                    <AlertDescription className="text-sm text-red-400">
+                      {errors.email.message}
                     </AlertDescription>
                   </Alert>
                 )}
@@ -126,15 +152,15 @@ export default function AuthPages() {
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute top-0 right-0 h-full px-3 py-2 text-slate-400 hover:bg-transparent hover:text-slate-300"
-                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-0 top-0 h-full px-3 py-2 text-slate-400 hover:bg-transparent hover:text-slate-300"
+                    onClick={() => setShowPassword((p) => !p)}
                   >
                     {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                   </Button>
                 </div>
                 {errors.password && (
                   <Alert className="border-red-500/20 bg-red-500/10 py-2">
-                    <AlertDescription className="text-red-400 text-sm">
+                    <AlertDescription className="text-sm text-red-400">
                       {errors.password.message}
                     </AlertDescription>
                   </Alert>
@@ -149,7 +175,7 @@ export default function AuthPages() {
                 {isLoading ? (
                   <div className="flex items-center justify-center">
                     <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-                    Signing In...
+                    Signing In…
                   </div>
                 ) : (
                   "Sign In"
@@ -160,18 +186,18 @@ export default function AuthPages() {
         </Card>
 
         <footer className="mt-8 text-center">
-          <p className="text-slate-500 text-xs">
+          <p className="text-xs text-slate-500">
             By continuing, you agree to our{" "}
             <Link
               href="/terms"
-              className="text-slate-400 text-xs underline hover:text-slate-300"
+              className="text-xs text-slate-400 underline hover:text-slate-300"
             >
               Terms of Service
             </Link>{" "}
             and{" "}
             <Link
               href="/privacy"
-              className="text-slate-400 text-xs underline hover:text-slate-300"
+              className="text-xs text-slate-400 underline hover:text-slate-300"
             >
               Privacy Policy
             </Link>
