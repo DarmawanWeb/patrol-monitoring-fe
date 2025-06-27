@@ -49,9 +49,6 @@ jobs:
               echo "🔨 Building project"
               pnpm build
 
-              echo "📁 Copying .env to dist/"
-              cp .env next/.env
-
               echo "🚀 Running or restarting app with PM2"
               if pm2 describe patrol-be > /dev/null; then
                 pm2 restart patrol-be --update-env
