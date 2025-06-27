@@ -50,7 +50,7 @@ jobs:
               pnpm build
 
               echo "📁 Copying .env to dist/"
-              cp .env dist/.env
+              cp .env next/.env
 
               echo "🚀 Running or restarting app with PM2"
               if pm2 describe patrol-be > /dev/null; then
