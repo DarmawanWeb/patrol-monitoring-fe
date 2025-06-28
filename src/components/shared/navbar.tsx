@@ -1,10 +1,17 @@
 "use client"
-import { Dog } from "lucide-react"
+
+import { Dog, LogOut } from "lucide-react"
 import { useEffect, useState } from "react"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import type { User } from "@/types/auth"
 
-export default function Navbar() {
+interface NavbarProps {
+  user: User
+  logout: () => void
+}
+export default function Navbar({ user, logout }: NavbarProps) {
   const [currentTime, setCurrentTime] = useState<Date>(new Date())
-
   const formatTime = (date: Date): string => date.toUTCString().slice(17, 25)
   const formatDate = (date: Date): string => date.toISOString().slice(0, 10)
 
@@ -12,34 +19,42 @@ export default function Navbar() {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000)
     return () => clearInterval(timer)
   }, [])
-  if (!currentTime) return null
+
+  const getInitials = (name: string): string => {
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2)
+  }
 
   return (
-    <div className="absolute top-0 right-0 left-0 z-50 h-16 border-slate-700/50 border-b bg-slate-900/90 backdrop-blur-sm">
+    <header className="absolute inset-x-0 top-0 z-50 h-16 border-slate-700/50 border-b bg-slate-900/90 backdrop-blur-sm">
       <div className="flex h-full items-center justify-between px-6">
         <section className="flex items-center space-x-6">
           <div className="flex flex-col">
-            <div className="font-medium text-slate-400 text-xs uppercase tracking-wide">
+            <span className="font-medium text-slate-400 text-xs uppercase tracking-wide">
               UTC TIME
-            </div>
-            <div className=" font-bold text-lg text-white">
+            </span>
+            <span className="font-bold text-lg text-white">
               {formatTime(currentTime)}
-            </div>
+            </span>
           </div>
           <div className="hidden flex-col sm:flex">
-            <div className="text-slate-400 text-xs uppercase tracking-wide">
+            <span className="text-slate-400 text-xs uppercase tracking-wide">
               DATE
-            </div>
-            <div className=" text-slate-300 text-sm">
+            </span>
+            <span className="text-slate-300 text-sm">
               {formatDate(currentTime)}
-            </div>
+            </span>
           </div>
         </section>
 
         <section className="flex items-center space-x-3">
           <div className="relative rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 p-3 shadow-lg">
             <Dog size={24} className="text-white" />
-            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-400/20 to-transparent"></div>
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-400/20 to-transparent" />
           </div>
           <div className="hidden flex-col md:flex">
             <span className="font-bold text-white text-xl tracking-tight">
@@ -52,19 +67,26 @@ export default function Navbar() {
         </section>
 
         <section className="flex items-center space-x-3">
-          <div className="relative h-10 w-10 overflow-hidden rounded-full border-2 border-gray-600/50">
-            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600 font-semibold text-sm text-white">
-              AD
-            </div>
-          </div>
+          <Avatar className="h-10 w-10 border-2 border-gray-600/50">
+            <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
+          </Avatar>
+
           <div className="hidden flex-col items-start lg:flex">
-            <span className="font-medium text-sm text-white">
-              Agus Darmawan
-            </span>
-            <span className="text-gray-400 text-xs">Admin</span>
+            <span className="font-medium text-sm text-white">{user?.name}</span>
+            <span className="text-gray-400 text-xs">{user.role}</span>
           </div>
+
+          <Button
+            size="icon"
+            variant="ghost"
+            aria-label="Log out"
+            onClick={logout}
+            className="ml-1 text-slate-400 hover:text-white"
+          >
+            <LogOut size={20} />
+          </Button>
         </section>
       </div>
-    </div>
+    </header>
   )
 }

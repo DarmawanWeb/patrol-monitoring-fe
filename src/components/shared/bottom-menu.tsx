@@ -5,41 +5,56 @@ import { useState } from "react"
 import { Button } from "../ui/button"
 import { Card } from "../ui/card"
 
-export default function BottomMenu() {
+interface BottomMenuProps {
+  role?: string
+}
+
+export default function BottomMenu({ role }: BottomMenuProps) {
   const [activeTab, setActiveTab] = useState("route")
 
   const navItems = [
     {
       id: "route",
       icon: Route,
+      adminOnly: false,
     },
     {
       id: "report",
       icon: FileText,
+      adminOnly: true,
+    },
+
+    {
+      id: "playback",
+      icon: Play,
+      adminOnly: false,
     },
     {
       id: "settings",
       icon: Settings,
-    },
-    {
-      id: "playback",
-      icon: Play,
+      adminOnly: true,
     },
     {
       id: "robot",
       icon: Bot,
+      adminOnly: true,
     },
     {
       id: "person",
       icon: User,
+      adminOnly: true,
     },
-  ]
+  ] as const
+
+  const visibleItems = navItems.filter(
+    (item) => !item.adminOnly || role === "admin",
+  )
 
   return (
     <div className="-translate-x-1/2 fixed bottom-6 left-1/2 z-50 w-fit max-w-xl transform">
       <Card className="w-fit rounded-4xl border-slate-700/50 bg-slate-800/70 p-0 backdrop-blur-sm">
         <div className="flex items-center justify-center space-x-6 px-4 py-3">
-          {navItems.map((item) => {
+          {visibleItems.map((item) => {
             const Icon = item.icon
             const isActive = activeTab === item.id
 
@@ -49,7 +64,7 @@ export default function BottomMenu() {
                 onClick={() => setActiveTab(item.id)}
                 variant="outline"
                 size="sm"
-                className={`flex h-12 w-12 items-center justify-center rounded-full border border-slate-600 bg-slate-700/90 transition-all duration-300`}
+                className="flex h-12 w-12 items-center justify-center rounded-full border border-slate-600 bg-slate-700/90 transition-all duration-300"
               >
                 <div
                   className={`relative rounded-full p-2 transition-all duration-100 ${
