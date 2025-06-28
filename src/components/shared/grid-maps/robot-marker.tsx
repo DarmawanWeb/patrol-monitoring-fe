@@ -1,48 +1,48 @@
-import { Navigation } from "lucide-react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Navigation } from "lucide-react"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
 interface Robot {
-  id: string;
-  location: { x: number; y: number };
-  heading: number;
-  color?: string;
-  name?: string;
+  id: string
+  location: { x: number; y: number }
+  heading: number
+  color?: string
+  name?: string
 }
 
 interface RobotMarkersProps {
-  robots: Robot[];
-  rosToScreen: (x: number, y: number) => { x: number; y: number };
+  robots: Robot[]
+  rosToScreen: (x: number, y: number) => { x: number; y: number }
 }
 
 export default function RobotMarkers({
   robots,
   rosToScreen,
 }: RobotMarkersProps) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const pathname = usePathname()
 
   const handleClick = (robotId: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("robotId", robotId);
-    router.push(`${pathname}?${params.toString()}`);
-  };
+    const params = new URLSearchParams(searchParams.toString())
+    params.set("robotId", robotId)
+    router.push(`${pathname}?${params.toString()}`)
+  }
 
   const handleKeyPress = (
     event: React.KeyboardEvent<HTMLElement>,
     robotId: string,
   ) => {
     if (event.key === "Enter" || event.key === " ") {
-      handleClick(robotId);
+      handleClick(robotId)
     }
-  };
+  }
 
   return (
     <>
       {robots.map((robot, index) => {
-        const screenPos = rosToScreen(robot.location.x, robot.location.y);
+        const screenPos = rosToScreen(robot.location.x, robot.location.y)
         const robotColor =
-          robot.color || `hsl(${(index * 137.5) % 360}, 70%, 50%)`;
+          robot.color || `hsl(${(index * 137.5) % 360}, 70%, 50%)`
 
         return (
           <section
@@ -79,8 +79,8 @@ export default function RobotMarkers({
               </div>
             </div>
           </section>
-        );
+        )
       })}
     </>
-  );
+  )
 }

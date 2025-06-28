@@ -1,72 +1,72 @@
 // robot-sidebar.tsx
-"use client";
-import { Battery, Navigation, Signal, X, Zap } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+"use client"
+import { Battery, Navigation, Signal, X, Zap } from "lucide-react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 
 interface Robot {
-  id: string;
-  location: { x: number; y: number };
-  heading: number;
-  color?: string;
-  name?: string;
-  battery?: number;
-  status?: string;
-  speed?: number;
-  signal?: number;
-  lastUpdate?: string;
+  id: string
+  location: { x: number; y: number }
+  heading: number
+  color?: string
+  name?: string
+  battery?: number
+  status?: string
+  speed?: number
+  signal?: number
+  lastUpdate?: string
 }
 
 interface RobotSidebarProps {
-  robots: Robot[];
+  robots: Robot[]
 }
 
 function getChessPosition(x: number, y: number): string {
-  const letters = "ABCDEFGHIJKLMNO";
-  const col = Math.floor(x / 100 + 7.5);
-  const row = Math.floor(-y / 100 + 7.5);
+  const letters = "ABCDEFGHIJKLMNO"
+  const col = Math.floor(x / 100 + 7.5)
+  const row = Math.floor(-y / 100 + 7.5)
 
   if (col >= 0 && col < 15 && row >= 0 && row < 15) {
-    const rowNumber = 15 - row;
-    return `${letters[col]}${rowNumber}`;
+    const rowNumber = 15 - row
+    return `${letters[col]}${rowNumber}`
   }
-  return "??";
+  return "??"
 }
 
 function getStatusColor(status?: string) {
   switch (status?.toLowerCase()) {
     case "active":
     case "moving":
-      return "bg-green-500";
+      return "bg-green-500"
     case "idle":
     case "waiting":
-      return "bg-yellow-500";
+      return "bg-yellow-500"
     case "error":
     case "offline":
-      return "bg-red-500";
+      return "bg-red-500"
     default:
-      return "bg-gray-500";
+      return "bg-gray-500"
   }
 }
 
 export default function RobotSidebar({ robots }: RobotSidebarProps) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const selectedRobotId = searchParams.get("robotId");
-  const selectedRobot = robots.find((robot) => robot.id === selectedRobotId);
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const selectedRobotId = searchParams.get("robotId")
+  const selectedRobot = robots.find((robot) => robot.id === selectedRobotId)
 
   const closeSidebar = () => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete("robotId");
-    router.push(`${window.location.pathname}?${params.toString()}`);
-  };
+    const params = new URLSearchParams(searchParams.toString())
+    params.delete("robotId")
+    router.push(`${window.location.pathname}?${params.toString()}`)
+  }
 
   const selectRobot = (robotId: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("robotId", robotId);
-    router.push(`${window.location.pathname}?${params.toString()}`);
-  };
+    const params = new URLSearchParams(searchParams.toString())
+    params.set("robotId", robotId)
+    router.push(`${window.location.pathname}?${params.toString()}`)
+  }
 
   return (
     <div
@@ -308,5 +308,5 @@ export default function RobotSidebar({ robots }: RobotSidebarProps) {
         </div>
       </div>
     </div>
-  );
+  )
 }

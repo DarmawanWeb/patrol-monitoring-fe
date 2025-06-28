@@ -1,80 +1,49 @@
-"use client";
-import axios from "axios";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+"use client"
 
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-
-import { useForm } from "react-hook-form";
-
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Dog, Eye, EyeOff } from "lucide-react"
+import Link from "next/link"
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+import { useAuthContext } from "@/components/provider/auth-provider"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 
-import { Dog, Eye, EyeOff } from "lucide-react";
-
-import { toast } from "sonner";
-import { apiUrl } from "@/lib/env";
-
-import { setAuthData } from "@/lib/cookie";
-
-const schema = z.object({
+const loginSchema = z.object({
   email: z.string().email("Enter a valid e-mail address"),
   password: z
     .string()
     .min(8, "Password must be at least 8 characters")
     .nonempty("Password is required"),
-});
+})
 
-type FormValues = z.infer<typeof schema>;
+type LoginFormValues = z.infer<typeof loginSchema>
 
-export default function AuthPages() {
-  const router = useRouter();
-  const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+export default function LoginForm() {
+  const { login, isLoading } = useAuthContext()
+  const [showPassword, setShowPassword] = useState(false)
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormValues>({
-    resolver: zodResolver(schema),
-  });
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+  })
 
-  const onSubmit = async (data: FormValues) => {
-    try {
-      setIsLoading(true);
-      const res = await axios.post(`${apiUrl}/auth/login`, {
-        email: data.email,
-        password: data.password,
-      });
-      const { accessToken, refreshToken } = res.data.data;
-      setAuthData(accessToken, refreshToken);
-      toast.success("Signed in successfully!");
-      router.push("/");
-    } catch (err) {
-      if (axios.isAxiosError(err) && err.response) {
-        const msg =
-          (err.response.data as { message?: string })?.message ??
-          "Login failed";
-        toast.error(msg);
-      } else {
-        toast.error("Unexpected error. Please try again.");
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const onSubmit = async (data: LoginFormValues) => {
+    await login(data)
+  }
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
@@ -89,17 +58,17 @@ export default function AuthPages() {
             <Dog size={28} className="text-white" />
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-400/20 to-transparent" />
           </div>
-          <h1 className="text-3xl font-bold tracking-tight text-white">
+          <h1 className="font-bold text-3xl text-white tracking-tight">
             HotDogTracker
           </h1>
-          <p className="mt-1 text-sm text-slate-400">
+          <p className="mt-1 text-slate-400 text-sm">
             Real-time Monitoring Platform
           </p>
         </section>
 
         <Card className="border-slate-700/50 bg-slate-800/50 shadow-2xl backdrop-blur-sm">
           <CardHeader className="space-y-1 pb-0">
-            <CardTitle className="text-2xl font-bold text-white">
+            <CardTitle className="font-bold text-2xl text-white">
               Welcome Back
             </CardTitle>
             <CardDescription className="text-slate-400">
@@ -125,7 +94,7 @@ export default function AuthPages() {
                 />
                 {errors.email && (
                   <Alert className="border-red-500/20 bg-red-500/10 py-2">
-                    <AlertDescription className="text-sm text-red-400">
+                    <AlertDescription className="text-red-400 text-sm">
                       {errors.email.message}
                     </AlertDescription>
                   </Alert>
@@ -152,7 +121,7 @@ export default function AuthPages() {
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-0 top-0 h-full px-3 py-2 text-slate-400 hover:bg-transparent hover:text-slate-300"
+                    className="absolute top-0 right-0 h-full px-3 py-2 text-slate-400 hover:bg-transparent hover:text-slate-300"
                     onClick={() => setShowPassword((p) => !p)}
                   >
                     {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -160,7 +129,7 @@ export default function AuthPages() {
                 </div>
                 {errors.password && (
                   <Alert className="border-red-500/20 bg-red-500/10 py-2">
-                    <AlertDescription className="text-sm text-red-400">
+                    <AlertDescription className="text-red-400 text-sm">
                       {errors.password.message}
                     </AlertDescription>
                   </Alert>
@@ -186,25 +155,24 @@ export default function AuthPages() {
         </Card>
 
         <footer className="mt-8 text-center">
-          <p className="text-xs text-slate-500">
+          <p className="text-slate-500 text-xs">
             By continuing, you agree to our{" "}
             <Link
               href="/terms"
-              className="text-xs text-slate-400 underline hover:text-slate-300"
+              className="text-slate-400 text-xs underline hover:text-slate-300"
             >
               Terms of Service
             </Link>{" "}
             and{" "}
             <Link
               href="/privacy"
-              className="text-xs text-slate-400 underline hover:text-slate-300"
+              className="text-slate-400 text-xs underline hover:text-slate-300"
             >
               Privacy Policy
             </Link>
-            .
           </p>
         </footer>
       </div>
     </main>
-  );
+  )
 }

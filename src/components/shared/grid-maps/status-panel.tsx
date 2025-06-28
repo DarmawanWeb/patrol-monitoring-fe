@@ -1,21 +1,21 @@
-import { Card } from "@/components/ui/card";
+import { Card } from "@/components/ui/card"
 
 interface StatusPanelProps {
-  scale: number;
-  currentCenter: { x: number; y: number };
-  robots: { id: string; location: { x: number; y: number }; name?: string }[];
+  scale: number
+  currentCenter: { x: number; y: number }
+  robots: { id: string; location: { x: number; y: number }; name?: string }[]
 }
 
 function _getChessPosition(x: number, y: number): string {
-  const letters = "ABCDEFGHIJKLMNO";
-  const col = Math.floor(x / 100 + 7.5);
-  const row = Math.floor(-y / 100 + 7.5);
+  const letters = "ABCDEFGHIJKLMNO"
+  const col = Math.floor(x / 100 + 7.5)
+  const row = Math.floor(-y / 100 + 7.5)
 
   if (col >= 0 && col < 15 && row >= 0 && row < 15) {
-    const rowNumber = 15 - row;
-    return `${letters[col]}${rowNumber}`;
+    const rowNumber = 15 - row
+    return `${letters[col]}${rowNumber}`
   }
-  return "??";
+  return "??"
 }
 
 export default function StatusPanel({
@@ -73,5 +73,5 @@ export default function StatusPanel({
         </div>
       </Card>
     </div>
-  );
+  )
 }

@@ -1,11 +1,11 @@
-import { Home, Minus, Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Home, Minus, Plus } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 
 interface ControlPanelProps {
-  onZoomIn: () => void;
-  onZoomOut: () => void;
-  onResetView: () => void;
+  onZoomIn: () => void
+  onZoomOut: () => void
+  onResetView: () => void
 }
 
 export default function ControlPanel({
@@ -41,5 +41,5 @@ export default function ControlPanel({
         </div>
       </Card>
     </section>
-  );
+  )
 }

@@ -1,50 +1,42 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import { Toaster } from "@/components/ui/sonner";
-import "@/styles/globals.css";
-import { ThemeProvider } from "next-themes";
-import type React from "react";
-import { Suspense } from "react";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+import type { Metadata } from "next"
+import { Geist_Mono } from "next/font/google"
+import { ThemeProvider } from "next-themes"
+import { Suspense } from "react"
+import { AuthProvider } from "@/components/provider/auth-provider"
+import { QueryProvider } from "@/components/provider/query-provider"
+import LoadingPage from "@/components/shared/loading"
+import { Toaster } from "@/components/ui/sonner"
+import "@/styles/globals.css"
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
-});
+})
 
 export const metadata: Metadata = {
   title: "HotDogTracker",
-  keywords: ["HotDogTracker", "Real-time Monitoring", "Hot Dog", "Tracker"],
   description:
-    "HotDogTracker is a real-time monitoring platform for hot dog vendors, providing insights into sales, inventory, and customer preferences.",
+    "HotDogTracker gives vendors live insights into sales, inventory and customer preferences.",
   manifest: "favicons/manifest.json",
-};
+}
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: {
+  children: React.ReactNode
+}) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} font-mono antialiased`}
-      >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem={true}
-          disableTransitionOnChange={true}
-        >
-          <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
-
-          <Toaster position="bottom-right" />
+      <body className={`${geistMono.variable} font-mono antialiased`}>
+        <ThemeProvider attribute="class" defaultTheme="dark">
+          <QueryProvider>
+            <Suspense fallback={<LoadingPage />}>
+              <AuthProvider>{children}</AuthProvider>
+            </Suspense>
+            <Toaster position="bottom-right" />
+          </QueryProvider>
         </ThemeProvider>
       </body>
     </html>
-  );
+  )
 }

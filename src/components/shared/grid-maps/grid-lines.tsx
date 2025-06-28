@@ -1,17 +1,17 @@
-import { MAP_CONFIG } from "./maps-config";
+import { MAP_CONFIG } from "./maps-config"
 
 interface GridLinesProps {
-  screenToRos: (screenX: number, screenY: number) => { x: number; y: number };
+  screenToRos: (screenX: number, screenY: number) => { x: number; y: number }
 }
 
 export default function GridLines({ screenToRos }: GridLinesProps) {
-  const gridLines = [];
-  const { SIZE, GRID_SIZE, MAJOR_GRID_INTERVAL } = MAP_CONFIG;
+  const gridLines = []
+  const { SIZE, GRID_SIZE, MAJOR_GRID_INTERVAL } = MAP_CONFIG
 
   // Regular grid lines
   for (let x = 0; x <= SIZE; x += GRID_SIZE) {
-    const isMajor = x % (GRID_SIZE * MAJOR_GRID_INTERVAL) === 0;
-    const rosX = screenToRos(x, 0).x;
+    const isMajor = x % (GRID_SIZE * MAJOR_GRID_INTERVAL) === 0
+    const rosX = screenToRos(x, 0).x
 
     gridLines.push(
       <div
@@ -25,7 +25,7 @@ export default function GridLines({ screenToRos }: GridLinesProps) {
         }`}
         style={{ left: `${x}px` }}
       />,
-    );
+    )
 
     if (isMajor && x !== SIZE / 2) {
       gridLines.push(
@@ -36,12 +36,12 @@ export default function GridLines({ screenToRos }: GridLinesProps) {
         >
           {Math.round(rosX / 100)}
         </div>,
-      );
+      )
     }
   }
 
   for (let y = 0; y <= SIZE; y += GRID_SIZE) {
-    const isMajor = y % (GRID_SIZE * MAJOR_GRID_INTERVAL) === 0;
+    const isMajor = y % (GRID_SIZE * MAJOR_GRID_INTERVAL) === 0
 
     gridLines.push(
       <div
@@ -55,7 +55,7 @@ export default function GridLines({ screenToRos }: GridLinesProps) {
         }`}
         style={{ top: `${y}px` }}
       />,
-    );
+    )
   }
-  return <>{gridLines}</>;
+  return <>{gridLines}</>
 }

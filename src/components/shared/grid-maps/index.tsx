@@ -1,277 +1,277 @@
-"use client";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
-import ControlPanel from "./control-panel";
-import GridLines from "./grid-lines";
-import { MAP_CONFIG } from "./maps-config";
-import RobotMarkers from "./robot-marker";
-import StatusPanel from "./status-panel";
+"use client"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useCallback, useEffect, useRef, useState } from "react"
+import ControlPanel from "./control-panel"
+import GridLines from "./grid-lines"
+import { MAP_CONFIG } from "./maps-config"
+import RobotMarkers from "./robot-marker"
+import StatusPanel from "./status-panel"
 
 interface Robot {
-  id: string;
-  location: { x: number; y: number };
-  heading: number;
-  color?: string;
-  name?: string;
+  id: string
+  location: { x: number; y: number }
+  heading: number
+  color?: string
+  name?: string
 }
 
 interface GridMapProps {
-  robots: Robot[];
+  robots: Robot[]
 }
 
 const GridMap: React.FC<GridMapProps> = ({ robots = [] }) => {
-  const _router = useRouter();
-  const searchParams = useSearchParams();
+  const _router = useRouter()
+  const searchParams = useSearchParams()
 
-  const [scale, setScale] = useState<number>(1);
-  const [translateX, setTranslateX] = useState<number>(0);
-  const [translateY, setTranslateY] = useState<number>(0);
-  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [scale, setScale] = useState<number>(1)
+  const [translateX, setTranslateX] = useState<number>(0)
+  const [translateY, setTranslateY] = useState<number>(0)
+  const [isDragging, setIsDragging] = useState<boolean>(false)
   const [dragStart, setDragStart] = useState<{ x: number; y: number }>({
     x: 0,
     y: 0,
-  });
-  const [isInitialized, setIsInitialized] = useState<boolean>(false);
+  })
+  const [isInitialized, setIsInitialized] = useState<boolean>(false)
 
-  const mapContainerRef = useRef<HTMLDivElement | null>(null);
-  const mapRef = useRef<HTMLDivElement | null>(null);
-  const updateTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
+  const mapContainerRef = useRef<HTMLDivElement | null>(null)
+  const mapRef = useRef<HTMLDivElement | null>(null)
+  const updateTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined)
 
   // Update URL params when scale or position changes
   const updateUrlParams = useCallback(
     (newScale: number, newX: number, newY: number) => {
-      if (!isInitialized) return;
+      if (!isInitialized) return
 
       if (updateTimeoutRef.current) {
-        clearTimeout(updateTimeoutRef.current);
+        clearTimeout(updateTimeoutRef.current)
       }
 
       updateTimeoutRef.current = setTimeout(() => {
-        const params = new URLSearchParams(searchParams.toString());
-        params.set("scale", newScale.toFixed(3));
-        params.set("x", newX.toFixed(1));
-        params.set("y", newY.toFixed(1));
+        const params = new URLSearchParams(searchParams.toString())
+        params.set("scale", newScale.toFixed(3))
+        params.set("x", newX.toFixed(1))
+        params.set("y", newY.toFixed(1))
 
-        const newUrl = `${window.location.pathname}?${params.toString()}`;
-        window.history.replaceState({}, "", newUrl);
-      }, 200);
+        const newUrl = `${window.location.pathname}?${params.toString()}`
+        window.history.replaceState({}, "", newUrl)
+      }, 200)
     },
     [searchParams, isInitialized],
-  );
+  )
 
   const rosToScreen = useCallback((x: number, y: number) => {
     return {
       x: x + MAP_CONFIG.SIZE / 2,
       y: MAP_CONFIG.SIZE / 2 - y,
-    };
-  }, []);
+    }
+  }, [])
 
   const screenToRos = useCallback((screenX: number, screenY: number) => {
     return {
       x: screenX - MAP_CONFIG.SIZE / 2,
       y: MAP_CONFIG.SIZE / 2 - screenY,
-    };
-  }, []);
+    }
+  }, [])
 
   const calculateMinZoom = useCallback(() => {
-    if (!mapContainerRef.current) return MAP_CONFIG.MIN_ZOOM;
-    const containerW = mapContainerRef.current.clientWidth;
-    const containerH = mapContainerRef.current.clientHeight;
+    if (!mapContainerRef.current) return MAP_CONFIG.MIN_ZOOM
+    const containerW = mapContainerRef.current.clientWidth
+    const containerH = mapContainerRef.current.clientHeight
     return Math.max(
       containerW / MAP_CONFIG.SIZE,
       containerH / MAP_CONFIG.SIZE,
       MAP_CONFIG.MIN_ZOOM,
-    );
-  }, []);
+    )
+  }, [])
 
   const constrainPanning = useCallback(
     (newTranslateX: number, newTranslateY: number, currentScale: number) => {
       if (!mapContainerRef.current)
-        return { x: newTranslateX, y: newTranslateY };
+        return { x: newTranslateX, y: newTranslateY }
 
-      const containerW = mapContainerRef.current.clientWidth;
-      const containerH = mapContainerRef.current.clientHeight;
-      const scaledMapW = MAP_CONFIG.SIZE * currentScale;
-      const scaledMapH = MAP_CONFIG.SIZE * currentScale;
+      const containerW = mapContainerRef.current.clientWidth
+      const containerH = mapContainerRef.current.clientHeight
+      const scaledMapW = MAP_CONFIG.SIZE * currentScale
+      const scaledMapH = MAP_CONFIG.SIZE * currentScale
 
-      let constrainedX = newTranslateX;
-      let constrainedY = newTranslateY;
+      let constrainedX = newTranslateX
+      let constrainedY = newTranslateY
 
       if (scaledMapW > containerW) {
-        const maxX = 0;
-        const minX = containerW - scaledMapW;
-        constrainedX = Math.max(minX, Math.min(maxX, newTranslateX));
+        const maxX = 0
+        const minX = containerW - scaledMapW
+        constrainedX = Math.max(minX, Math.min(maxX, newTranslateX))
       } else {
-        constrainedX = (containerW - scaledMapW) / 2;
+        constrainedX = (containerW - scaledMapW) / 2
       }
 
       if (scaledMapH > containerH) {
-        const maxY = 0;
-        const minY = containerH - scaledMapH;
-        constrainedY = Math.max(minY, Math.min(maxY, newTranslateY));
+        const maxY = 0
+        const minY = containerH - scaledMapH
+        constrainedY = Math.max(minY, Math.min(maxY, newTranslateY))
       } else {
-        constrainedY = (containerH - scaledMapH) / 2;
+        constrainedY = (containerH - scaledMapH) / 2
       }
 
-      return { x: constrainedX, y: constrainedY };
+      return { x: constrainedX, y: constrainedY }
     },
     [],
-  );
+  )
 
   const updateTransform = useCallback(
     (newScale: number, newTranslateX: number, newTranslateY: number) => {
-      const minZoom = calculateMinZoom();
+      const minZoom = calculateMinZoom()
       const constrainedScale = Math.max(
         minZoom,
         Math.min(MAP_CONFIG.MAX_ZOOM, newScale),
-      );
+      )
       const constrained = constrainPanning(
         newTranslateX,
         newTranslateY,
         constrainedScale,
-      );
+      )
 
-      setScale(constrainedScale);
-      setTranslateX(constrained.x);
-      setTranslateY(constrained.y);
+      setScale(constrainedScale)
+      setTranslateX(constrained.x)
+      setTranslateY(constrained.y)
 
-      updateUrlParams(constrainedScale, constrained.x, constrained.y);
+      updateUrlParams(constrainedScale, constrained.x, constrained.y)
     },
     [calculateMinZoom, constrainPanning, updateUrlParams],
-  );
+  )
 
   const performZoom = useCallback(
     (zoomFactor: number, centerX: number, centerY: number) => {
-      const worldX = (centerX - translateX) / scale;
-      const worldY = (centerY - translateY) / scale;
+      const worldX = (centerX - translateX) / scale
+      const worldY = (centerY - translateY) / scale
 
-      const newScale = scale * zoomFactor;
+      const newScale = scale * zoomFactor
 
-      const newTranslateX = centerX - worldX * newScale;
-      const newTranslateY = centerY - worldY * newScale;
+      const newTranslateX = centerX - worldX * newScale
+      const newTranslateY = centerY - worldY * newScale
 
-      updateTransform(newScale, newTranslateX, newTranslateY);
+      updateTransform(newScale, newTranslateX, newTranslateY)
     },
     [scale, translateX, translateY, updateTransform],
-  );
+  )
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    setIsDragging(true);
+    setIsDragging(true)
     setDragStart({
       x: e.clientX - translateX,
       y: e.clientY - translateY,
-    });
-  };
+    })
+  }
 
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
-      if (!isDragging) return;
+      if (!isDragging) return
 
-      const newTranslateX = e.clientX - dragStart.x;
-      const newTranslateY = e.clientY - dragStart.y;
+      const newTranslateX = e.clientX - dragStart.x
+      const newTranslateY = e.clientY - dragStart.y
 
-      updateTransform(scale, newTranslateX, newTranslateY);
+      updateTransform(scale, newTranslateX, newTranslateY)
     },
     [isDragging, dragStart, scale, updateTransform],
-  );
+  )
 
   const handleMouseUp = useCallback(() => {
-    setIsDragging(false);
-  }, []);
+    setIsDragging(false)
+  }, [])
 
   const handleWheel = (e: React.WheelEvent) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    const rect = mapContainerRef.current!.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
+    const rect = mapContainerRef.current!.getBoundingClientRect()
+    const mouseX = e.clientX - rect.left
+    const mouseY = e.clientY - rect.top
 
     // Detect touchpad vs mouse wheel
-    const isTouchpad = Math.abs(e.deltaY) < 50;
+    const isTouchpad = Math.abs(e.deltaY) < 50
     const sensitivity = isTouchpad
       ? MAP_CONFIG.TOUCHPAD_SENSITIVITY
-      : MAP_CONFIG.WHEEL_SENSITIVITY;
+      : MAP_CONFIG.WHEEL_SENSITIVITY
 
-    const zoomFactor = e.deltaY > 0 ? 1 - sensitivity : 1 + sensitivity;
-    performZoom(zoomFactor, mouseX, mouseY);
-  };
+    const zoomFactor = e.deltaY > 0 ? 1 - sensitivity : 1 + sensitivity
+    performZoom(zoomFactor, mouseX, mouseY)
+  }
 
   const zoomIn = () => {
-    const centerX = mapContainerRef.current!.clientWidth / 2;
-    const centerY = mapContainerRef.current!.clientHeight / 2;
-    performZoom(1 + MAP_CONFIG.ZOOM_STEP, centerX, centerY);
-  };
+    const centerX = mapContainerRef.current!.clientWidth / 2
+    const centerY = mapContainerRef.current!.clientHeight / 2
+    performZoom(1 + MAP_CONFIG.ZOOM_STEP, centerX, centerY)
+  }
 
   const zoomOut = () => {
-    const centerX = mapContainerRef.current!.clientWidth / 2;
-    const centerY = mapContainerRef.current!.clientHeight / 2;
-    performZoom(1 - MAP_CONFIG.ZOOM_STEP, centerX, centerY);
-  };
+    const centerX = mapContainerRef.current!.clientWidth / 2
+    const centerY = mapContainerRef.current!.clientHeight / 2
+    performZoom(1 - MAP_CONFIG.ZOOM_STEP, centerX, centerY)
+  }
 
   const resetView = useCallback(() => {
-    if (!mapContainerRef.current) return;
-    const containerW = mapContainerRef.current.clientWidth;
-    const containerH = mapContainerRef.current.clientHeight;
+    if (!mapContainerRef.current) return
+    const containerW = mapContainerRef.current.clientWidth
+    const containerH = mapContainerRef.current.clientHeight
     updateTransform(
       1,
       containerW / 2 - MAP_CONFIG.SIZE / 2,
       containerH / 2 - MAP_CONFIG.SIZE / 2,
-    );
-  }, [updateTransform]);
+    )
+  }, [updateTransform])
 
   // Initialize from URL params or reset view
   useEffect(() => {
-    if (!mapContainerRef.current) return;
+    if (!mapContainerRef.current) return
 
-    const urlScale = searchParams.get("scale");
-    const urlX = searchParams.get("x");
-    const urlY = searchParams.get("y");
+    const urlScale = searchParams.get("scale")
+    const urlX = searchParams.get("x")
+    const urlY = searchParams.get("y")
 
     if (urlScale && urlX && urlY) {
       // Use URL params
-      const newScale = parseFloat(urlScale);
-      const newX = parseFloat(urlX);
-      const newY = parseFloat(urlY);
+      const newScale = parseFloat(urlScale)
+      const newX = parseFloat(urlX)
+      const newY = parseFloat(urlY)
 
-      setScale(newScale);
-      setTranslateX(newX);
-      setTranslateY(newY);
+      setScale(newScale)
+      setTranslateX(newX)
+      setTranslateY(newY)
     } else {
       // Reset to default view
-      resetView();
+      resetView()
     }
 
     // Mark as initialized after a small delay to ensure proper setup
-    setTimeout(() => setIsInitialized(true), 100);
-  }, [resetView, searchParams.get]); // Remove searchParams dependency to avoid re-initialization
+    setTimeout(() => setIsInitialized(true), 100)
+  }, [resetView, searchParams.get]) // Remove searchParams dependency to avoid re-initialization
 
   useEffect(() => {
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
+    document.addEventListener("mousemove", handleMouseMove)
+    document.addEventListener("mouseup", handleMouseUp)
 
     return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("mousemove", handleMouseMove)
+      document.removeEventListener("mouseup", handleMouseUp)
       if (updateTimeoutRef.current) {
-        clearTimeout(updateTimeoutRef.current);
+        clearTimeout(updateTimeoutRef.current)
       }
-    };
-  }, [handleMouseMove, handleMouseUp]);
+    }
+  }, [handleMouseMove, handleMouseUp])
 
   const currentCenter = useCallback(() => {
-    if (!mapContainerRef.current) return { x: 0, y: 0 };
+    if (!mapContainerRef.current) return { x: 0, y: 0 }
 
-    const containerW = mapContainerRef.current.clientWidth;
-    const containerH = mapContainerRef.current.clientHeight;
+    const containerW = mapContainerRef.current.clientWidth
+    const containerH = mapContainerRef.current.clientHeight
 
-    const viewportCenterX = containerW / 2;
-    const viewportCenterY = containerH / 2;
+    const viewportCenterX = containerW / 2
+    const viewportCenterY = containerH / 2
 
-    const worldX = (viewportCenterX - translateX) / scale;
-    const worldY = (viewportCenterY - translateY) / scale;
+    const worldX = (viewportCenterX - translateX) / scale
+    const worldY = (viewportCenterY - translateY) / scale
 
-    return screenToRos(worldX, worldY);
-  }, [translateX, translateY, scale, screenToRos]);
+    return screenToRos(worldX, worldY)
+  }, [translateX, translateY, scale, screenToRos])
 
   return (
     <section className="relative h-screen w-screen overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
@@ -316,7 +316,7 @@ const GridMap: React.FC<GridMapProps> = ({ robots = [] }) => {
         robots={robots}
       />
     </section>
-  );
-};
+  )
+}
 
-export default GridMap;
+export default GridMap

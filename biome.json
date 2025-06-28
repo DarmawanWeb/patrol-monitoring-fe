@@ -8,6 +8,7 @@
   "linter": {
     "enabled": true,
     "rules": {
+      "recommended": true,
       "a11y": {
         "noStaticElementInteractions": "off",
         "useKeyWithClickEvents": "off"
@@ -22,7 +23,6 @@
         },
         "useUniqueElementIds": "off"
       },
-      "recommended": true,
       "suspicious": {
         "noExplicitAny": "off",
         "noConfusingVoidType": "off"

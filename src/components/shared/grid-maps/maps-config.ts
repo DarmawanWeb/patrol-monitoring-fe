@@ -7,4 +7,4 @@ export const MAP_CONFIG = {
   ZOOM_STEP: 0.15,
   WHEEL_SENSITIVITY: 0.08,
   TOUCHPAD_SENSITIVITY: 0.02,
-};
+}

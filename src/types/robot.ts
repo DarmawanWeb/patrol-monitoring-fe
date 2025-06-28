@@ -11,30 +11,30 @@ export enum RobotStatus {
 }
 
 export interface Robot {
-  id: string;
-  name: string;
-  robotType: RobotType;
+  id: string
+  name: string
+  robotType: RobotType
   location: {
-    x: number;
-    y: number;
-  };
-  speed: number;
-  status: RobotStatus | string;
+    x: number
+    y: number
+  }
+  speed: number
+  status: RobotStatus | string
   ptz?: {
-    pan: number;
-    tilt: number;
-    zoomRgb: number;
-    zoomThermal: number;
-  };
+    pan: number
+    tilt: number
+    zoomRgb: number
+    zoomThermal: number
+  }
   sensorStatus: {
-    battery: number;
-    signal: number;
-    temperature: number;
-    rgbCamera: boolean;
-    thermalCamera?: boolean;
-    acusticCamera?: boolean;
-    lidar: boolean;
-    imu: boolean;
-  };
-  timeStamp: string;
+    battery: number
+    signal: number
+    temperature: number
+    rgbCamera: boolean
+    thermalCamera?: boolean
+    acusticCamera?: boolean
+    lidar: boolean
+    imu: boolean
+  }
+  timeStamp: string
 }

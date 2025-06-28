@@ -1,13 +1,13 @@
-"use client";
+"use client"
 
-import { Dog, Home, ArrowLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { ArrowLeft, Dog, Home } from "lucide-react"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 
 export default function NotFound() {
-  const router = useRouter();
+  const router = useRouter()
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
@@ -23,7 +23,7 @@ export default function NotFound() {
             <Dog size={28} className="text-white" />
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-400/20 to-transparent" />
           </div>
-          <h1 className="text-3xl font-bold tracking-tight text-white">
+          <h1 className="font-bold text-3xl text-white tracking-tight">
             HotDogTracker
           </h1>
         </section>
@@ -31,8 +31,8 @@ export default function NotFound() {
         <Card className="border-slate-700/50 bg-slate-800/50 shadow-2xl backdrop-blur-sm">
           <CardContent className="pt-6 text-center">
             <div className="mb-6">
-              <div className="text-6xl font-bold text-cyan-500 mb-2">404</div>
-              <h2 className="text-2xl font-bold text-white mb-2">
+              <div className="mb-2 font-bold text-6xl text-cyan-500">404</div>
+              <h2 className="mb-2 font-bold text-2xl text-white">
                 Page Not Found
               </h2>
               <p className="text-slate-400">
@@ -62,5 +62,5 @@ export default function NotFound() {
         </Card>
       </div>
     </main>
-  );
+  )
 }

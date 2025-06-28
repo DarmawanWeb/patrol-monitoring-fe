@@ -1,12 +1,12 @@
-"use client";
+"use client"
 
-import { Bot, FileText, Play, Route, Settings, User } from "lucide-react";
-import { useState } from "react";
-import { Button } from "../ui/button";
-import { Card } from "../ui/card";
+import { Bot, FileText, Play, Route, Settings, User } from "lucide-react"
+import { useState } from "react"
+import { Button } from "../ui/button"
+import { Card } from "../ui/card"
 
 export default function BottomMenu() {
-  const [activeTab, setActiveTab] = useState("route");
+  const [activeTab, setActiveTab] = useState("route")
 
   const navItems = [
     {
@@ -33,15 +33,15 @@ export default function BottomMenu() {
       id: "person",
       icon: User,
     },
-  ];
+  ]
 
   return (
     <div className="-translate-x-1/2 fixed bottom-6 left-1/2 z-50 w-fit max-w-xl transform">
       <Card className="w-fit rounded-4xl border-slate-700/50 bg-slate-800/70 p-0 backdrop-blur-sm">
         <div className="flex items-center justify-center space-x-6 px-4 py-3">
           {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = activeTab === item.id;
+            const Icon = item.icon
+            const isActive = activeTab === item.id
 
             return (
               <Button
@@ -61,10 +61,10 @@ export default function BottomMenu() {
                   <Icon size={24} className="drop-shadow-lg" />
                 </div>
               </Button>
-            );
+            )
           })}
         </div>
       </Card>
     </div>
-  );
+  )
 }
