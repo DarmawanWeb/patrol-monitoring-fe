@@ -41,13 +41,18 @@ const robotSchema = z.object({
 
 export type RobotFormValues = z.infer<typeof robotSchema>
 
+// Default form values
+const defaultFormValues: RobotFormValues = {
+  name: "",
+  typeId: 0,
+  description: "",
+}
+
 export function useRobotForm(defaultValues?: Partial<RobotFormValues>) {
   return useForm<RobotFormValues>({
     resolver: zodResolver(robotSchema),
     defaultValues: {
-      name: "",
-      typeId: 0,
-      description: "",
+      ...defaultFormValues,
       ...defaultValues,
     },
   })
@@ -69,26 +74,22 @@ export default function RobotFormDialog({
   const createMutation = useCreateRobot()
   const updateMutation = useUpdateRobot()
 
-  const form = useRobotForm(
-    editingRobot
-      ? {
+  const form = useRobotForm()
+
+  useEffect(() => {
+    if (isOpen) {
+      if (editingRobot) {
+        form.reset({
           name: editingRobot.name,
           typeId: editingRobot.type.id,
           description: editingRobot.description,
-        }
-      : undefined,
-  )
-
-  useEffect(() => {
-    if (isOpen && editingRobot) {
-      form.reset({
-        name: editingRobot.name,
-        typeId: editingRobot.type.id,
-        description: editingRobot.description,
-      })
+        })
+      } else {
+        form.reset(defaultFormValues)
+      }
       setImageFile(null)
-    } else if (isOpen && !editingRobot) {
-      form.reset()
+    } else {
+      form.reset(defaultFormValues)
       setImageFile(null)
     }
   }, [isOpen, editingRobot, form])
@@ -110,17 +111,19 @@ export default function RobotFormDialog({
       }
 
       onClose()
-      form.reset()
-      setImageFile(null)
-    } catch (_error) {
-      // Error handled by mutation
-    }
+    } catch (_error) {}
+  }
+
+  const handleClose = () => {
+    form.reset(defaultFormValues)
+    setImageFile(null)
+    onClose()
   }
 
   const isLoading = createMutation.isPending || updateMutation.isPending
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="max-w-md border-slate-700/50 bg-slate-800/95 text-white backdrop-blur-sm">
         <DialogHeader>
           <DialogTitle>
@@ -165,7 +168,7 @@ export default function RobotFormDialog({
                 form.setValue("typeId", parseInt(value))
               }
             >
-              <SelectTrigger className="border-slate-600/50 bg-slate-700/50 text-white focus:border-cyan-500/50">
+              <SelectTrigger className="w-full border-slate-600/50 bg-slate-700/50 text-white focus:border-cyan-500/50">
                 <SelectValue placeholder="Select robot type" />
               </SelectTrigger>
               <SelectContent className="border-slate-700/50 bg-slate-800 text-white">
@@ -221,7 +224,7 @@ export default function RobotFormDialog({
             <Button
               type="button"
               variant="outline"
-              onClick={onClose}
+              onClick={handleClose}
               className="border-slate-600 text-slate-300 hover:bg-slate-700"
               disabled={isLoading}
             >

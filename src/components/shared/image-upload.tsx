@@ -32,7 +32,7 @@ export default function ImageUpload({
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null
-    onImageChange(file)
+    if (file) onImageChange(file)
   }
 
   const removeImage = () => {
@@ -41,12 +41,12 @@ export default function ImageUpload({
   }
 
   return (
-    <div className="space-y-3">
-      <Label className="text-slate-300">Robot Image</Label>
+    <div className="space-y-4">
+      <Label className="font-medium text-slate-300 text-sm">Robot Image</Label>
 
-      {(preview || currentImage) && (
-        <div className="relative">
-          <div className="relative h-32 w-32 overflow-hidden rounded-lg border border-slate-600">
+      {preview || currentImage ? (
+        <div className="relative w-fit">
+          <div className="relative h-32 w-32 overflow-hidden rounded-xl border border-slate-600 shadow-md">
             <Image
               src={preview || currentImage || ""}
               width={128}
@@ -58,27 +58,30 @@ export default function ImageUpload({
           <Button
             type="button"
             variant="ghost"
-            size="sm"
+            size="icon"
             onClick={removeImage}
-            className="-top-2 -right-2 absolute h-6 w-6 rounded-full bg-red-500 p-0 text-white hover:bg-red-600"
+            className="absolute top-[-8px] right-[-8px] z-10 h-6 w-6 rounded-full bg-red-600 text-white shadow hover:bg-red-700"
           >
-            <X size={12} />
+            <X size={14} />
           </Button>
+        </div>
+      ) : (
+        <div className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-slate-500 border-dashed bg-slate-700/40 px-4 py-3 text-slate-300 transition hover:bg-slate-600/60">
+          <Upload size={18} />
+          <span className="text-sm">Click to upload image</span>
+          <Input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="hidden"
+          />
         </div>
       )}
 
-      <div className="flex items-center space-x-2">
-        <Input
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          className="border-slate-600/50 bg-slate-700/50 text-white file:mr-4 file:rounded file:border-0 file:bg-slate-600 file:px-4 file:py-2 file:text-sm file:text-white"
-        />
-        <Upload size={16} className="text-slate-400" />
-      </div>
-
       {imageFile && (
-        <p className="text-slate-400 text-sm">Selected: {imageFile.name}</p>
+        <p className="text-slate-400 text-sm">
+          Selected: <span className="font-medium">{imageFile.name}</span>
+        </p>
       )}
     </div>
   )

@@ -28,11 +28,16 @@ const typeSchema = z.object({
 
 export type TypeFormValues = z.infer<typeof typeSchema>
 
+// Default form values
+const defaultFormValues: TypeFormValues = {
+  name: "",
+}
+
 export function useTypeForm(defaultValues?: Partial<TypeFormValues>) {
   return useForm<TypeFormValues>({
     resolver: zodResolver(typeSchema),
     defaultValues: {
-      name: "",
+      ...defaultFormValues,
       ...defaultValues,
     },
   })
@@ -52,21 +57,19 @@ export default function TypeFormDialog({
   const createMutation = useCreateRobotType()
   const updateMutation = useUpdateRobotType()
 
-  const form = useTypeForm(
-    editingType
-      ? {
-          name: editingType.name,
-        }
-      : undefined,
-  )
+  const form = useTypeForm()
 
   useEffect(() => {
-    if (isOpen && editingType) {
-      form.reset({
-        name: editingType.name,
-      })
-    } else if (isOpen && !editingType) {
-      form.reset()
+    if (isOpen) {
+      if (editingType) {
+        form.reset({
+          name: editingType.name,
+        })
+      } else {
+        form.reset(defaultFormValues)
+      }
+    } else {
+      form.reset(defaultFormValues)
     }
   }, [isOpen, editingType, form])
 
@@ -82,16 +85,18 @@ export default function TypeFormDialog({
       }
 
       onClose()
-      form.reset()
-    } catch (_error) {
-      // Error handled by mutation
-    }
+    } catch (_error) {}
+  }
+
+  const handleClose = () => {
+    form.reset(defaultFormValues)
+    onClose()
   }
 
   const isLoading = createMutation.isPending || updateMutation.isPending
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="border-slate-700/50 bg-slate-800/95 text-white backdrop-blur-sm">
         <DialogHeader>
           <DialogTitle>
@@ -130,7 +135,7 @@ export default function TypeFormDialog({
             <Button
               type="button"
               variant="outline"
-              onClick={onClose}
+              onClick={handleClose}
               className="border-slate-600 text-slate-300 hover:bg-slate-700"
               disabled={isLoading}
             >

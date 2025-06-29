@@ -49,9 +49,7 @@ export default function TypeTab() {
       await deleteTypeMutation.mutateAsync(typeToDelete.id)
       setIsDeleteDialogOpen(false)
       setTypeToDelete(null)
-    } catch (_error) {
-      // Error handled by mutation
-    }
+    } catch (_error) {}
   }
 
   const typeColumns = [

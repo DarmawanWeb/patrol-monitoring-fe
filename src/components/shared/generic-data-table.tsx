@@ -24,6 +24,7 @@ interface GenericDataTableProps<T> {
   onView?: (item: T) => void
   isLoading?: boolean
   emptyMessage?: string
+  deleteDisabled?: boolean
   actions?: boolean
 }
 

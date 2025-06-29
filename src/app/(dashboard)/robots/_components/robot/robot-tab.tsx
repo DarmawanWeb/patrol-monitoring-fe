@@ -49,7 +49,6 @@ export default function RobotTab() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [robotToDelete, setRobotToDelete] = useState<Robot | null>(null)
 
-  // Update filter config with robot types
   const filterConfig = useMemo(() => {
     if (robotTypes) {
       return updateRobotTypeOptions(robotFilterConfig, robotTypes)
@@ -57,7 +56,6 @@ export default function RobotTab() {
     return robotFilterConfig
   }, [robotTypes])
 
-  // Client-side filtering and pagination
   const allRobots = robotResponse?.data || []
   const filteredRobots = useGenericFiltering(allRobots, filters, filterConfig)
   const { data: paginatedRobots, meta } = useGenericPagination(
@@ -88,9 +86,7 @@ export default function RobotTab() {
       await deleteRobotMutation.mutateAsync(robotToDelete.id)
       setIsDeleteDialogOpen(false)
       setRobotToDelete(null)
-    } catch (_error) {
-      // Error handled by mutation
-    }
+    } catch (_error) {}
   }
 
   return (
@@ -179,14 +175,12 @@ export default function RobotTab() {
         </CardContent>
       </Card>
 
-      {/* Robot Form Dialog */}
       <RobotFormDialog
         isOpen={isFormDialogOpen}
         onClose={() => setIsFormDialogOpen(false)}
         editingRobot={editingRobot}
       />
 
-      {/* Delete Alert Dialog */}
       <DeleteAlertDialog
         isOpen={isDeleteDialogOpen}
         onClose={() => setIsDeleteDialogOpen(false)}
