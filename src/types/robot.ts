@@ -1,7 +1,4 @@
-export enum RobotType {
-  X30 = "x30",
-  Lite3 = "lite3",
-}
+import type { BaseFilters, UrlState } from "./filtering"
 
 export enum RobotStatus {
   Idle = "idle",
@@ -10,31 +7,63 @@ export enum RobotStatus {
   Inactive = "inactive",
 }
 
+export interface RobotType {
+  id: number
+  name: string
+}
+
 export interface Robot {
   id: string
   name: string
-  robotType: RobotType
-  location: {
-    x: number
-    y: number
-  }
-  speed: number
+  type: RobotType
   status: RobotStatus | string
-  ptz?: {
-    pan: number
-    tilt: number
-    zoomRgb: number
-    zoomThermal: number
-  }
-  sensorStatus: {
-    battery: number
-    signal: number
-    temperature: number
-    rgbCamera: boolean
-    thermalCamera?: boolean
-    acusticCamera?: boolean
-    lidar: boolean
-    imu: boolean
-  }
-  timeStamp: string
+  description: string
+  imagePath: string
+  createdAt: string
+  updatedAt: string
+  websockets: {
+    batteryLevel: number
+    locationX: number
+    locationY: number
+    status: RobotStatus | string
+    timeStamp: string
+  }[]
+}
+
+export interface RobotTypeResponse extends RobotType {
+  robotCount: number
+}
+
+export interface RobotFilters extends BaseFilters {
+  status: string
+  typeId: string
+}
+
+export interface RobotUrlState extends UrlState {
+  status: string
+  typeId: string
+}
+
+export interface RobotCreateInput {
+  name: string
+  typeId: number
+  description: string
+  imageFile?: File
+}
+
+export interface RobotUpdateInput {
+  id: string
+  name: string
+  typeId: number
+  description: string
+  imageFile?: File
+}
+
+export interface TypeCreateInput {
+  name: string
+}
+
+export interface TypeUpdateInput {
+  id: number
+  name: string
 }

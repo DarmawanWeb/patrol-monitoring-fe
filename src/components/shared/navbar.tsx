@@ -4,13 +4,10 @@ import { Dog, LogOut } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import type { User } from "@/types/auth"
+import { useAuthContext } from "../provider/auth-provider"
 
-interface NavbarProps {
-  user: User
-  logout: () => void
-}
-export default function Navbar({ user, logout }: NavbarProps) {
+export default function Navbar() {
+  const { user, logout } = useAuthContext()
   const [currentTime, setCurrentTime] = useState<Date>(new Date())
   const formatTime = (date: Date): string => date.toUTCString().slice(17, 25)
   const formatDate = (date: Date): string => date.toISOString().slice(0, 10)
@@ -68,12 +65,12 @@ export default function Navbar({ user, logout }: NavbarProps) {
 
         <section className="flex items-center space-x-3">
           <Avatar className="h-10 w-10 border-2 border-gray-600/50">
-            <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
+            <AvatarFallback>{getInitials(user?.name || "")}</AvatarFallback>
           </Avatar>
 
           <div className="hidden flex-col items-start lg:flex">
             <span className="font-medium text-sm text-white">{user?.name}</span>
-            <span className="text-gray-400 text-xs">{user.role}</span>
+            <span className="text-gray-400 text-xs">{user?.role}</span>
           </div>
 
           <Button

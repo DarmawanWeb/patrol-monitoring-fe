@@ -12,13 +12,8 @@ import {
   setAuthData,
 } from "@/lib/cookie"
 import { apiUrl } from "@/lib/env"
-import type { ApiError, RefreshTokenResponse } from "@/types/auth"
-
-export interface ApiResponse<T = unknown> {
-  success: boolean
-  message: string
-  data: T
-}
+import type { ApiError, ApiResponse } from "@/types/api"
+import type { RefreshTokenResponse } from "@/types/auth"
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: apiUrl,

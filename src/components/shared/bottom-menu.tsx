@@ -2,15 +2,13 @@
 
 import { Bot, FileText, Play, Route, Settings, User } from "lucide-react"
 import { useState } from "react"
+import { useAuthContext } from "../provider/auth-provider"
 import { Button } from "../ui/button"
 import { Card } from "../ui/card"
 
-interface BottomMenuProps {
-  role?: string
-}
-
-export default function BottomMenu({ role }: BottomMenuProps) {
+export default function BottomMenu() {
   const [activeTab, setActiveTab] = useState("route")
+  const { user } = useAuthContext()
 
   const navItems = [
     {
@@ -47,7 +45,7 @@ export default function BottomMenu({ role }: BottomMenuProps) {
   ] as const
 
   const visibleItems = navItems.filter(
-    (item) => !item.adminOnly || role === "admin",
+    (item) => !item.adminOnly || user?.role === "admin",
   )
 
   return (
