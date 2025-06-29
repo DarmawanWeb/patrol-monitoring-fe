@@ -28,7 +28,7 @@ class UserService {
   }
 
   async createUser(data: UserCreateInput): Promise<User> {
-    const res = await api.post<ApiResponse<User>>("/users", {
+    const res = await api.post<ApiResponse<User>>("/auth/create-user", {
       name: data.name,
       email: data.email,
       password: data.password,
@@ -49,10 +49,6 @@ class UserService {
       role: data.role,
     }
 
-    if (data.password && data.password.trim() !== "") {
-      updatePayload.password = data.password
-    }
-
     const res = await api.put<ApiResponse<User>>(
       `/users/${data.id}`,
       updatePayload,
@@ -67,16 +63,6 @@ class UserService {
 
   async deleteUser(id: number): Promise<void> {
     await api.delete(`/users/${id}`)
-  }
-
-  async toggleUserStatus(id: number): Promise<User> {
-    const res = await api.patch<ApiResponse<User>>(`/users/${id}/toggle-status`)
-
-    if (res.data.success) {
-      return res.data.data
-    } else {
-      throw new Error(res.data.message || "Failed to toggle user status")
-    }
   }
 }
 

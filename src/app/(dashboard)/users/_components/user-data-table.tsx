@@ -3,15 +3,12 @@
 import GenericDataTable from "@/components/shared/generic-data-table"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import type { User } from "@/types/user"
 
 interface UserDataTableProps {
   users: User[]
   onEdit: (user: User) => void
   onDelete: (user: User) => void
-  onToggleStatus: (user: User) => void
-  isToggling: boolean
   filteredCount: number
   totalCount: number
 }
@@ -20,8 +17,6 @@ export default function UserDataTable({
   users,
   onEdit,
   onDelete,
-  onToggleStatus,
-  isToggling,
   filteredCount,
   totalCount,
 }: UserDataTableProps) {
@@ -29,8 +24,6 @@ export default function UserDataTable({
     switch (role.toLowerCase()) {
       case "admin":
         return "bg-red-500/20 text-red-300 border-red-500/30"
-      case "operator":
-        return "bg-blue-500/20 text-blue-300 border-blue-500/30"
       case "user":
         return "bg-green-500/20 text-green-300 border-green-500/30"
       default:
@@ -75,18 +68,17 @@ export default function UserDataTable({
     {
       key: "status",
       label: "Status",
+
       render: (user: User) => (
-        <Button
-          onClick={() => onToggleStatus(user)}
-          disabled={isToggling}
-          className={`rounded-full px-3 py-1 font-medium text-xs transition-colors ${
+        <Badge
+          className={`${
             user.active
-              ? "bg-green-500/20 text-green-300 hover:bg-green-500/30"
-              : "bg-red-500/20 text-red-300 hover:bg-red-500/30"
-          } ${isToggling ? "cursor-not-allowed opacity-50" : ""}`}
+              ? "border-green-500/30 bg-green-500/20 text-green-300"
+              : "border-red-500/30 bg-red-500/20 text-red-300"
+          }`}
         >
           {user.active ? "Active" : "Inactive"}
-        </Button>
+        </Badge>
       ),
     },
     {

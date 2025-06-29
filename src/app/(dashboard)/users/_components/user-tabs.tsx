@@ -1,5 +1,4 @@
 "use client"
-
 import { Plus, Users } from "lucide-react"
 import { useState } from "react"
 import DeleteAlertDialog from "@/components/modal/delete-alert-dialog"
@@ -17,11 +16,7 @@ import { userFilterConfig } from "@/config/user-filter"
 import { useGenericFiltering } from "@/hooks/use-generic-filtering"
 import { useGenericPagination } from "@/hooks/use-generic-pagination"
 import { useGenericUrlState } from "@/hooks/use-generic-url-state"
-import {
-  useAllUsers,
-  useDeleteUser,
-  useToggleUserStatus,
-} from "@/hooks/use-user-queries"
+import { useAllUsers, useDeleteUser } from "@/hooks/use-user-queries"
 import type { User, UserUrlState } from "@/types/user"
 import UserDataTable from "./user-data-table"
 import UserFormDialog from "./user-form-dialog"
@@ -29,7 +24,6 @@ import UserFormDialog from "./user-form-dialog"
 export default function UserTab() {
   const { filters, updateFilters, resetFilters } =
     useGenericUrlState<UserUrlState>({
-      tab: "users",
       search: "",
       role: "all",
       active: "all",
@@ -39,14 +33,12 @@ export default function UserTab() {
 
   const { data: userResponse, isLoading, error, isError } = useAllUsers()
   const deleteUserMutation = useDeleteUser()
-  const toggleStatusMutation = useToggleUserStatus()
 
   const [isFormDialogOpen, setIsFormDialogOpen] = useState(false)
   const [editingUser, setEditingUser] = useState<User | null>(null)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [userToDelete, setUserToDelete] = useState<User | null>(null)
 
-  // Client-side filtering and pagination
   const allUsers = (userResponse as any)?.data || []
   const filteredUsers = useGenericFiltering(allUsers, filters, userFilterConfig)
   const { data: paginatedUsers, meta } = useGenericPagination(
@@ -77,17 +69,7 @@ export default function UserTab() {
       await deleteUserMutation.mutateAsync(userToDelete.id)
       setIsDeleteDialogOpen(false)
       setUserToDelete(null)
-    } catch (_error) {
-      // Error handled by mutation
-    }
-  }
-
-  const handleToggleStatus = async (user: User) => {
-    try {
-      await toggleStatusMutation.mutateAsync(user.id)
-    } catch (_error) {
-      // Error handled by mutation
-    }
+    } catch (_error) {}
   }
 
   return (
@@ -111,7 +93,6 @@ export default function UserTab() {
             </Button>
           </div>
 
-          {/* Generic Filters */}
           <GenericFilters
             filters={filters}
             onFiltersChange={updateFilters}
@@ -141,8 +122,6 @@ export default function UserTab() {
                 users={paginatedUsers}
                 onEdit={handleEditUser}
                 onDelete={handleDeleteRequest}
-                onToggleStatus={handleToggleStatus}
-                isToggling={toggleStatusMutation.isPending}
                 filteredCount={filteredUsers.length}
                 totalCount={allUsers.length}
               />

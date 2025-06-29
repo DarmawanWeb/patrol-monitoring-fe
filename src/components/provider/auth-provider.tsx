@@ -12,6 +12,7 @@ interface AuthContextType {
   isLoading: boolean
   isAuthenticated: boolean
   login: (c: LoginRequest) => Promise<void>
+  register?: (c: LoginRequest) => Promise<void>
   logout: () => Promise<void>
   refetchUser: () => void
 }
@@ -38,6 +39,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = async () => {
     await logoutMut.mutateAsync()
     router.replace("/auth")
+  }
+
+  const _register = async (c: LoginRequest) => {
+    await loginMut.mutateAsync(c)
+    router.replace("/dashboard")
   }
 
   useEffect(() => {

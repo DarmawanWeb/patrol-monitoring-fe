@@ -7,14 +7,12 @@ import UserTab from "./_components/user-tabs"
 function UserManagementContent() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 px-6 pt-20 pb-32">
-      {/* Background Effects */}
       <section className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="-top-40 -right-40 absolute h-80 w-80 rounded-full bg-gradient-to-br from-cyan-500/10 to-blue-600/10 blur-3xl" />
         <div className="-bottom-40 -left-40 absolute h-80 w-80 rounded-full bg-gradient-to-br from-purple-500/10 to-pink-600/10 blur-3xl" />
       </section>
 
-      <div className="relative mx-auto max-w-7xl">
-        {/* Header */}
+      <div className="relative mx-auto max-w-7xl pt-10">
         <section className="mb-8">
           <div className="mb-2 flex items-center space-x-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-cyan-500 to-blue-600">

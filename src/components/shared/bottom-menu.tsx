@@ -1,6 +1,7 @@
 "use client"
 
 import { Bot, FileText, Play, Route, Settings, User } from "lucide-react"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { useAuthContext } from "../provider/auth-provider"
 import { Button } from "../ui/button"
@@ -9,44 +10,37 @@ import { Card } from "../ui/card"
 export default function BottomMenu() {
   const [activeTab, setActiveTab] = useState("route")
   const { user } = useAuthContext()
+  const router = useRouter()
 
   const navItems = [
-    {
-      id: "route",
-      icon: Route,
-      adminOnly: false,
-    },
-    {
-      id: "report",
-      icon: FileText,
-      adminOnly: true,
-    },
-
-    {
-      id: "playback",
-      icon: Play,
-      adminOnly: false,
-    },
-    {
-      id: "settings",
-      icon: Settings,
-      adminOnly: true,
-    },
-    {
-      id: "robot",
-      icon: Bot,
-      adminOnly: true,
-    },
-    {
-      id: "person",
-      icon: User,
-      adminOnly: true,
-    },
+    { id: "route", icon: Route, adminOnly: false },
+    { id: "report", icon: FileText, adminOnly: true },
+    { id: "playback", icon: Play, adminOnly: false },
+    { id: "settings", icon: Settings, adminOnly: true },
+    { id: "robot", icon: Bot, adminOnly: true },
+    { id: "person", icon: User, adminOnly: true },
   ] as const
 
   const visibleItems = navItems.filter(
     (item) => !item.adminOnly || user?.role === "admin",
   )
+
+  const handleNavigation = (id: string) => {
+    setActiveTab(id)
+
+    // Routing berdasarkan ID
+    switch (id) {
+      case "robot":
+        router.push("/robots")
+        break
+      case "person":
+        router.push("/users")
+        break
+      default:
+        router.push("/dashboard")
+        break
+    }
+  }
 
   return (
     <div className="-translate-x-1/2 fixed bottom-6 left-1/2 z-50 w-fit max-w-xl transform">
@@ -59,7 +53,7 @@ export default function BottomMenu() {
             return (
               <Button
                 key={item.id}
-                onClick={() => setActiveTab(item.id)}
+                onClick={() => handleNavigation(item.id)}
                 variant="outline"
                 size="sm"
                 className="flex h-12 w-12 items-center justify-center rounded-full border border-slate-600 bg-slate-700/90 transition-all duration-300"

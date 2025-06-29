@@ -61,20 +61,3 @@ export const useDeleteUser = () => {
     },
   })
 }
-
-export const useToggleUserStatus = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: (id: number) => userService.toggleUserStatus(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: userKeys.lists() })
-      toast.success("User status updated successfully")
-    },
-    onError: (error: any) => {
-      toast.error(
-        error?.response?.data?.message || "Failed to update user status",
-      )
-    },
-  })
-}

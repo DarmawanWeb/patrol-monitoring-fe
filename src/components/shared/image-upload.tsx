@@ -2,7 +2,7 @@
 
 import { Upload, X } from "lucide-react"
 import Image from "next/image"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -19,25 +19,39 @@ export default function ImageUpload({
   imageFile,
 }: ImageUploadProps) {
   const [preview, setPreview] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
+    let url: string | null = null
     if (imageFile) {
-      const url = URL.createObjectURL(imageFile)
+      url = URL.createObjectURL(imageFile)
       setPreview(url)
-      return () => URL.revokeObjectURL(url)
     } else {
       setPreview(null)
+    }
+
+    return () => {
+      if (url) URL.revokeObjectURL(url)
     }
   }, [imageFile])
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null
-    if (file) onImageChange(file)
+    if (file) {
+      onImageChange(file)
+    }
   }
 
-  const removeImage = () => {
+  const handleRemove = () => {
     onImageChange(null)
     setPreview(null)
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""
+    }
+  }
+
+  const openFilePicker = () => {
+    fileInputRef.current?.click()
   }
 
   return (
@@ -48,7 +62,7 @@ export default function ImageUpload({
         <div className="relative w-fit">
           <div className="relative h-32 w-32 overflow-hidden rounded-xl border border-slate-600 shadow-md">
             <Image
-              src={preview || currentImage || ""}
+              src={preview || currentImage!}
               width={128}
               height={128}
               alt="Robot preview"
@@ -59,24 +73,29 @@ export default function ImageUpload({
             type="button"
             variant="ghost"
             size="icon"
-            onClick={removeImage}
+            onClick={handleRemove}
             className="absolute top-[-8px] right-[-8px] z-10 h-6 w-6 rounded-full bg-red-600 text-white shadow hover:bg-red-700"
           >
             <X size={14} />
           </Button>
         </div>
       ) : (
-        <div className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-slate-500 border-dashed bg-slate-700/40 px-4 py-3 text-slate-300 transition hover:bg-slate-600/60">
+        <div
+          className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-slate-500 border-dashed bg-slate-700/40 px-4 py-3 text-slate-300 transition hover:bg-slate-600/60"
+          onClick={openFilePicker}
+        >
           <Upload size={18} />
           <span className="text-sm">Click to upload image</span>
-          <Input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="hidden"
-          />
         </div>
       )}
+
+      <Input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleFileChange}
+        className="hidden"
+      />
 
       {imageFile && (
         <p className="text-slate-400 text-sm">
