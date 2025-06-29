@@ -1,4 +1,4 @@
-import type { NextConfig } from "next"
+import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
@@ -9,8 +9,13 @@ const nextConfig: NextConfig = {
         port: "5001",
         pathname: "/uploads/**",
       },
+      {
+        protocol: "https",
+        hostname: "patrol-api.agus-darmawan.com",
+        pathname: "/**",
+      },
     ],
   },
-}
+};
 
-export default nextConfig
+export default nextConfig;
