@@ -1,21 +1,21 @@
-"use client"
+"use client";
 
-import { Dog, LogOut } from "lucide-react"
-import { useEffect, useState } from "react"
-import { useAuthContext } from "@/components/provider/auth-provider"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
+import { Dog, LogOut } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useAuthContext } from "@/components/provider/auth-provider";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 
 export default function Navbar() {
-  const { user, logout } = useAuthContext()
-  const [currentTime, setCurrentTime] = useState(new Date())
-  const formatTime = (date: Date): string => date.toUTCString().slice(17, 25)
-  const formatDate = (date: Date): string => date.toISOString().slice(0, 10)
+  const { user, logout } = useAuthContext();
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const formatTime = (date: Date): string => date.toUTCString().slice(17, 25);
+  const formatDate = (date: Date): string => date.toISOString().slice(0, 10);
 
   useEffect(() => {
-    const timer = setInterval(() => setCurrentTime(new Date()), 1000)
-    return () => clearInterval(timer)
-  }, [])
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   const getInitials = (name: string): string => {
     return name
@@ -23,8 +23,8 @@ export default function Navbar() {
       .map((n) => n[0])
       .join("")
       .toUpperCase()
-      .slice(0, 2)
-  }
+      .slice(0, 2);
+  };
 
   return (
     <nav className="fixed top-0 right-0 left-0 z-40 w-full border-slate-700/50 border-b bg-slate-800/80 backdrop-blur-sm">
@@ -88,5 +88,5 @@ export default function Navbar() {
         </section>
       </div>
     </nav>
-  )
+  );
 }
