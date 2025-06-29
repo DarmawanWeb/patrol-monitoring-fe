@@ -1,11 +1,11 @@
-import type React from "react"
-import BottomMenu from "@/components/shared/bottom-menu"
-import Navbar from "@/components/shared/navbar"
+import type React from "react";
+import BottomMenu from "@/components/shared/bottom-menu";
+import Navbar from "@/components/shared/navbar";
 
 export default function DashboardLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <>
@@ -13,5 +13,5 @@ export default function DashboardLayout({
       {children}
       <BottomMenu />
     </>
-  )
+  );
 }
