@@ -19,7 +19,7 @@ import { Label } from "@/components/ui/label"
 import {
   useCreateRobotType,
   useUpdateRobotType,
-} from "@/hooks/use-robots-queries"
+} from "@/hooks/queries/use-robots-queries"
 import type { RobotTypeResponse } from "@/types/robot"
 
 const typeSchema = z.object({

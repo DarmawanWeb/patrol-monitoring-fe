@@ -17,14 +17,14 @@ import {
   robotFilterConfig,
   updateRobotTypeOptions,
 } from "@/config/robot-filters"
-import { useGenericFiltering } from "@/hooks/use-generic-filtering"
-import { useGenericPagination } from "@/hooks/use-generic-pagination"
-import { useGenericUrlState } from "@/hooks/use-generic-url-state"
 import {
   useAllRobots,
   useDeleteRobot,
   useRobotTypes,
-} from "@/hooks/use-robots-queries"
+} from "@/hooks/queries/use-robots-queries"
+import { useGenericFiltering } from "@/hooks/use-generic-filtering"
+import { useGenericPagination } from "@/hooks/use-generic-pagination"
+import { useGenericUrlState } from "@/hooks/use-generic-url-state"
 import type { Robot, RobotUrlState } from "@/types/robot"
 import RobotCard from "./robot-card"
 import RobotFormDialog from "./robot-form-dialog"

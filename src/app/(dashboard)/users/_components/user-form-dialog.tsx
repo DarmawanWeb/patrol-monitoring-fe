@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { useCreateUser, useUpdateUser } from "@/hooks/use-user-queries"
+import { useCreateUser, useUpdateUser } from "@/hooks/queries/use-user-queries"
 import type { User } from "@/types/user"
 
 // Zod Schemas

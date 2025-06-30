@@ -12,7 +12,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { useDeleteRobotType, useRobotTypes } from "@/hooks/use-robots-queries"
+import {
+  useDeleteRobotType,
+  useRobotTypes,
+} from "@/hooks/queries/use-robots-queries"
 import type { RobotTypeResponse } from "@/types/robot"
 import TypeFormDialog from "./type-form-dialog"
 

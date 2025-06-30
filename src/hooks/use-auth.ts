@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { authService } from "@/service/auth-service"
 import { useAuthStore } from "@/stores/auth-store"
-import { useCurrentUser } from "./use-auth-queries"
+import { useCurrentUser } from "./queries/use-auth-queries"
 
 export const useAuth = () => {
   const { user: persistedUser, isHydrated, setUser } = useAuthStore()

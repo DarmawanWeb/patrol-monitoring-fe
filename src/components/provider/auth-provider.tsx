@@ -2,8 +2,8 @@
 
 import { usePathname, useRouter } from "next/navigation"
 import { createContext, type ReactNode, useContext, useEffect } from "react"
+import { useLogin, useLogout } from "@/hooks/queries/use-auth-queries"
 import { useAuth } from "@/hooks/use-auth"
-import { useLogin, useLogout } from "@/hooks/use-auth-queries"
 import { authService } from "@/service/auth-service"
 import type { LoginRequest, User } from "@/types/auth"
 

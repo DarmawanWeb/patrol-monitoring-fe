@@ -13,10 +13,10 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { userFilterConfig } from "@/config/user-filter"
+import { useAllUsers, useDeleteUser } from "@/hooks/queries/use-user-queries"
 import { useGenericFiltering } from "@/hooks/use-generic-filtering"
 import { useGenericPagination } from "@/hooks/use-generic-pagination"
 import { useGenericUrlState } from "@/hooks/use-generic-url-state"
-import { useAllUsers, useDeleteUser } from "@/hooks/use-user-queries"
 import type { User, UserUrlState } from "@/types/user"
 import UserDataTable from "./user-data-table"
 import UserFormDialog from "./user-form-dialog"

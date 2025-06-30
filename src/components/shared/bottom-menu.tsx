@@ -1,44 +1,37 @@
 "use client"
 
 import { Bot, FileText, Play, Route, Settings, User } from "lucide-react"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { usePathname, useRouter } from "next/navigation"
 import { useAuthContext } from "../provider/auth-provider"
 import { Button } from "../ui/button"
 import { Card } from "../ui/card"
 
+const navItems = [
+  { id: "route", icon: Route, adminOnly: false, path: "/dashboard" },
+  { id: "report", icon: FileText, adminOnly: true, path: "/reports" },
+  { id: "playback", icon: Play, adminOnly: false, path: "/playback" },
+  { id: "settings", icon: Settings, adminOnly: true, path: "/settings" },
+  { id: "robot", icon: Bot, adminOnly: true, path: "/robots" },
+  { id: "person", icon: User, adminOnly: true, path: "/users" },
+] as const
+
 export default function BottomMenu() {
-  const [activeTab, setActiveTab] = useState("route")
   const { user } = useAuthContext()
   const router = useRouter()
-
-  const navItems = [
-    { id: "route", icon: Route, adminOnly: false },
-    { id: "report", icon: FileText, adminOnly: true },
-    { id: "playback", icon: Play, adminOnly: false },
-    { id: "settings", icon: Settings, adminOnly: true },
-    { id: "robot", icon: Bot, adminOnly: true },
-    { id: "person", icon: User, adminOnly: true },
-  ] as const
+  const pathname = usePathname()
 
   const visibleItems = navItems.filter(
     (item) => !item.adminOnly || user?.role === "admin",
   )
 
-  const handleNavigation = (id: string) => {
-    setActiveTab(id)
+  const activeTab = visibleItems.find((item) =>
+    pathname.startsWith(item.path),
+  )?.id
 
-    // Routing berdasarkan ID
-    switch (id) {
-      case "robot":
-        router.push("/robots")
-        break
-      case "person":
-        router.push("/users")
-        break
-      default:
-        router.push("/dashboard")
-        break
+  const handleNavigation = (id: string) => {
+    const item = navItems.find((i) => i.id === id)
+    if (item) {
+      router.push(item.path)
     }
   }
 

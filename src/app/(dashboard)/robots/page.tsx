@@ -1,15 +1,13 @@
 "use client"
-
 import { Bot } from "lucide-react"
-import { Suspense } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useRobotTypes } from "@/hooks/queries/use-robots-queries"
 import { useGenericUrlState } from "@/hooks/use-generic-url-state"
-import { useRobotTypes } from "@/hooks/use-robots-queries"
 import type { RobotUrlState } from "@/types/robot"
 import RobotTab from "./_components/robot/robot-tab"
 import TypeTab from "./_components/robot-type/type-tab"
 
-function RobotManagementContent() {
+export default function RobotManagementPage() {
   const { filters, updateFilters } = useGenericUrlState<RobotUrlState>({
     tab: "robots",
     search: "",
@@ -20,7 +18,6 @@ function RobotManagementContent() {
   })
 
   const { data: robotTypes } = useRobotTypes()
-
   const handleTabChange = (value: string) => {
     updateFilters({ tab: value, page: 1 })
   }
@@ -58,7 +55,7 @@ function RobotManagementContent() {
               value="robots"
               className="text-slate-300 data-[state=active]:bg-slate-700/50 data-[state=active]:text-white"
             >
-              Robots
+              Robots ({robotTypes?.length || 0})
             </TabsTrigger>
             <TabsTrigger
               value="types"
@@ -67,33 +64,14 @@ function RobotManagementContent() {
               Types ({robotTypes?.length || 0})
             </TabsTrigger>
           </TabsList>
-
           <TabsContent value="robots">
             <RobotTab />
           </TabsContent>
-
           <TabsContent value="types">
             <TypeTab />
           </TabsContent>
         </Tabs>
       </div>
     </main>
-  )
-}
-
-export default function RobotManagementPage() {
-  return (
-    <Suspense
-      fallback={
-        <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-          <div className="text-center">
-            <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-cyan-500 border-b-2"></div>
-            <p className="text-slate-400">Loading Robot Management...</p>
-          </div>
-        </div>
-      }
-    >
-      <RobotManagementContent />
-    </Suspense>
   )
 }

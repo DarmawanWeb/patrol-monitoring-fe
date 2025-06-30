@@ -29,7 +29,7 @@ import {
   useCreateRobot,
   useRobotTypes,
   useUpdateRobot,
-} from "@/hooks/use-robots-queries"
+} from "@/hooks/queries/use-robots-queries"
 import { imgUrl } from "@/lib/env"
 import type { Robot } from "@/types/robot"
 
@@ -41,7 +41,6 @@ const robotSchema = z.object({
 
 export type RobotFormValues = z.infer<typeof robotSchema>
 
-// Default form values
 const defaultFormValues: RobotFormValues = {
   name: "",
   typeId: 0,
